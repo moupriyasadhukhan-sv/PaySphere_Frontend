@@ -94,84 +94,92 @@
 
 
 // src/routes/AppRoutes.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+// src/routes/AppRoutes.jsx
+// src/routes/AppRoutes.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "../components/ProtectedRoute";
+
+import AdminDashboard from "../pages/Dashboards/AdminDashboard";
+import RegisterStaff from "../pages/Dashboards/RegisterStaff";
+import MerchantDashboard from "../pages/Dashboards/MerchantDashboard";
+import OpsAdminDashboard from "../pages/Dashboards/OpsAdminDashboard";
+import OpsDashboard from "../pages/Dashboards/OpsDashboard";
+import RiskDashboard from "../pages/Dashboards/RiskDashboard";
+import UserDashboard from "../pages/Dashboards/UserDashboard";
 
 import Login from "../pages/entrypages/login";
-import Register from "../pages/entrypages/registration";
-
-// ⚠️ Make sure casing matches your folder on disk: "Dashboards" vs "dashboards"
-import UserDashboard from "../pages/Dashboards/UserDashboard";
-import MerchantDashboard from "../pages/Dashboards/MerchantDashboard";
-import AdminDashboard from "../pages/Dashboards/AdminDashboard";
-import RiskDashboard from "../pages/Dashboards/RiskDashboard";
-import OpsDashboard from "../pages/Dashboards/OpsDashboard";
-import OpsAdminDashboard from "../pages/Dashboards/OpsAdminDashboard";
-
-import ProtectedRoute from "../components/ProtectedRoute";
+import Registration from "../pages/entrypages/registration";
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <Routes>
+      {/* Public */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Registration />} />
 
-        {/* Protected + role-guarded via one component */}
-        <Route
-          path="/dashboard/user"
-          element={
-            <ProtectedRoute allowed={["User"]}>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/merchant"
-          element={
-            <ProtectedRoute allowed={["Merchant"]}>
-              <MerchantDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/admin"
-          element={
-            <ProtectedRoute allowed={["Admin"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/risk"
-          element={
-            <ProtectedRoute allowed={["Risk"]}>
-              <RiskDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/ops"
-          element={
-            <ProtectedRoute allowed={["Ops"]}>
-              <OpsDashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* Shared endpoint: Admin OR Ops */}
-        <Route
-          path="/dashboard/ops-admin"
-          element={
-            <ProtectedRoute allowed={["Admin", "Ops"]}>
-              <OpsAdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+      {/* Old scheme */}
+      <Route path="/dashboard" element={<Navigate to="/dashboard/admin" replace />} />
 
-        {/* 404 */}
-        <Route path="*" element={<div className="p-6">Not found</div>} />
-      </Routes>
-    </BrowserRouter>
+      <Route
+        path="/dashboard/admin"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/register-staff"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <RegisterStaff />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/merchant"
+        element={
+          <ProtectedRoute allowedRoles={["Merchant"]}>
+            <MerchantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/ops"
+        element={
+          <ProtectedRoute allowedRoles={["Ops"]}>
+            <OpsDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/ops-admin"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Ops"]}>
+            <OpsAdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/risk"
+        element={
+          <ProtectedRoute allowedRoles={["Risk"]}>
+            <RiskDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/user"
+        element={
+          <ProtectedRoute allowedRoles={["User"]}>
+            <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 404 */}
+      <Route path="*" element={<div className="p-6">Not Found</div>} />
+    </Routes>
   );
 }
