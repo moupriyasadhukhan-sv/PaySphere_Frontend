@@ -1,18 +1,17 @@
 // src/pages/Dashboards/AdminDashboard.jsx
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
 import LogoutButton from "../../common/LogoutButton";
 import { useAuth } from "../../context/AuthContext";
 import SummaryCards from "./SummaryCards";
 import UsersTable from "../../components/users/UsersTable";
-import MerchantsTable from "../../components/merchants/MerchantsTable";
-
+// If your file is MerchantTable.jsx (singular), import it singular:
+import MerchantTable from "../../components/merchants/MerchantsTable";
+import TransactionsTable from "../../components/transactions/TransactionsTable";
 export default function AdminDashboard() {
   const { auth } = useAuth();
   const [tab, setTab] = useState("users");
-  
   const navigate = useNavigate();
 
   return (
@@ -24,17 +23,13 @@ export default function AdminDashboard() {
           <p className="text-sm text-gray-500">Manage users, merchants, and system operations</p>
         </div>
         <div className="flex items-center gap-3">
-          
-        <button
+          <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-700"
-
             onClick={() => navigate("/dashboard/admin/register-staff")}
-            
           >
             Register Staff
           </button>
-
           <span className="text-sm text-gray-600">Role: {auth?.role}</span>
           <LogoutButton />
         </div>
@@ -64,15 +59,15 @@ export default function AdminDashboard() {
         {/* Panels */}
         <section className="bg-white border rounded-xl p-4">
           {tab === "users" && <UsersTable />}
-          {tab === "merchants" && <MerchantsTable />}
-          {tab === "transactions" && (
-            <div>
-              <h2 className="text-lg font-semibold mb-1">Transaction History</h2>
-              <p className="text-sm text-gray-500">
-                Plug your transactions endpoint when ready (e.g., <code>/api/Transactions</code>).
-              </p>
-            </div>
-          )}
+          {tab === "merchants" && <MerchantTable />}
+          
+            {tab === "transactions" && (
+              <div>
+                <h2 className="text-lg font-semibold mb-3">Transaction History</h2>
+                <TransactionsTable />
+              </div>
+            )}
+
           {tab === "reports" && (
             <div>
               <h2 className="text-lg font-semibold mb-1">Audit Logs</h2>

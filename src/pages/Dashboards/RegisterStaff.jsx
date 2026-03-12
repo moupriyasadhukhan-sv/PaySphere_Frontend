@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import http from "../../services/http"; // your axios instance
 
-const ROLES = ["Admin", "Ops", "Risk"]; // adjust if needed
+const ROLES = ["Ops", "Risk"]; // adjust if needed
 
 export default function RegisterStaff() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function RegisterStaff() {
       // POST /api/Auth/Admin-register
       await http.post("/api/Auth/Admin-register", form);
       // success -> go back to old-scheme dashboard path
-      navigate("/dashboard/admin", { replace: true });
+      //navigate("/dashboard/admin", { replace: true });
     } catch (err) {
       const msg =
         err?.response?.data?.detail ||
