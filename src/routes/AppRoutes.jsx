@@ -13,6 +13,10 @@ import UserDashboard from "../pages/Dashboards/UserDashboard";
 import Login from "../pages/entrypages/login";
 import Registration from "../pages/entrypages/registration";
 
+
+import ShowLimit from "../pages/Limits/ShowLimit";
+import CreateLimit from "../pages/Limits/CreateLimit";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -81,6 +85,29 @@ export default function AppRoutes() {
         }
       />
 
+      
+      <Route
+        path="/limits/create"
+        element={
+          <ProtectedRoute allowedRoles={["Admin"]}>
+            <CreateLimit />
+          </ProtectedRoute>
+        }
+      />
+
+      
+      <Route
+        path="/limits/:userId"
+        element={
+          <ProtectedRoute allowedRoles={["Admin", "Ops", "Risk"]}>
+            <ShowLimit />
+          </ProtectedRoute>
+        }
+      />
+
+
+
+        
       {/* 404 */}
       <Route path="*" element={<div className="p-6">Not Found</div>} />
     </Routes>

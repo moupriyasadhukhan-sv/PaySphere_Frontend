@@ -1,7 +1,7 @@
 // src/components/users/UsersTable.jsx
 import { useEffect, useState } from "react";
 import http from "../../services/http";
-
+import { useNavigate } from "react-router-dom";
 const PAGE_SIZE = 50;
 
 // simple concurrency limiter
@@ -34,7 +34,7 @@ export default function UsersTable() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();  
   useEffect(() => {
     let mounted = true;
     setLoading(true);
@@ -95,7 +95,8 @@ export default function UsersTable() {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Balance</th>
-              <th className="px-4 py-3">Actions</th>
+              <th className="px-4 py-3">Create Limit</th>
+              <th className="px-4 py-3">Show Limit</th>
             </tr>
           </thead>
           <tbody>
@@ -120,13 +121,7 @@ export default function UsersTable() {
                   <td className="px-4 py-3">
                     <div className="flex flex-col">
                       <span className="font-medium">{r.name}</span>
-                      {/* Button under the name as requested */}
-                      <button
-                        className="text-indigo-600 text-xs hover:underline w-fit"
-                        onClick={() => alert(`Create Limit for user ${r.userId} (placeholder)`)}
-                      >
-                        Create Limit
-                      </button>
+                      
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -142,7 +137,25 @@ export default function UsersTable() {
                   </td>
                   <td className="px-4 py-3">{currency(r.balance)}</td>
                   <td className="px-4 py-3">
-                    <button className="border rounded-md px-3 py-1 hover:bg-gray-50">View Details</button>
+
+                    <button
+                        onClick={() => navigate(`/limits/create?userId=${encodeURIComponent(r.userId)}`)}
+                        className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+                                focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                    >
+                        Create Limit
+                    </button>
+                  </td>
+
+                  <td className="px-4 py-3">
+
+                    <button
+                        onClick={() => navigate(`/limits/${encodeURIComponent(r.userId)}`)}
+                        className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+                                focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                    >
+                        Show Limit
+                    </button>
                   </td>
                 </tr>
               ))}

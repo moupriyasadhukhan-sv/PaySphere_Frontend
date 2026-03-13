@@ -51,8 +51,8 @@ export default function MerchantsTable() {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Transactions</th>
-              <th className="px-4 py-3">Action</th>
+              <th className="px-4 py-3">Check Settlement</th>
+              <th className="px-4 py-3">Create Settlement</th>
             </tr>
           </thead>
           <tbody>
@@ -100,6 +100,31 @@ export default function MerchantsTable() {
                         }}
                       >
                         Check Settlement
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        className="border rounded-md px-3 py-1 hover:bg-gray-50"
+                        onClick={() => {
+                          // If you have a route, navigate:
+                          // navigate(`/settlement/${id}`);
+                          alert(`Check Settlement for Merchant ${id} (placeholder)`);
+                        }}
+                      >
+                        Create Settlement
+                      </button>
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <button
+                        className="border rounded-md px-3 py-1 hover:bg-gray-50"
+                        onClick={() => {
+                          // If you have a route, navigate:
+                          // navigate(`/settlement/${id}`);
+                          alert(`Check Settlement for Merchant ${id} (placeholder)`);
+                        }}
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>
