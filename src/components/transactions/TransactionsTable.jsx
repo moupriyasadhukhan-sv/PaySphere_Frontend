@@ -234,43 +234,43 @@ function formatCurrency(amount, currency) {
   }
 }
 
-function Pager({ page, pageSize, total, onPageChange }) {
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const canPrev = page > 1;
-  const canNext = page < totalPages;
+// function Pager({ page, pageSize, total, onPageChange }) {
+//   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+//   const canPrev = page > 1;
+//   const canNext = page < totalPages;
 
-  return (
-    <div className="flex items-center justify-between mt-3 text-sm">
-      <button
-        onClick={() => canPrev && onPageChange(page - 1)}
-        disabled={!canPrev}
-        className={`px-3 py-1 rounded border ${canPrev ? "bg-white hover:bg-gray-50" : "bg-gray-100 text-gray-400"}`}
-      >
-        Previous
-      </button>
+//   return (
+//     <div className="flex items-center justify-between mt-3 text-sm">
+//       <button
+//         onClick={() => canPrev && onPageChange(page - 1)}
+//         disabled={!canPrev}
+//         className={`px-3 py-1 rounded border ${canPrev ? "bg-white hover:bg-gray-50" : "bg-gray-100 text-gray-400"}`}
+//       >
+//         Previous
+//       </button>
 
-      <div className="text-gray-600">
-        Page <span className="font-medium">{page}</span> / {totalPages} • Showing{" "}
-        <span className="font-medium">
-          {total === 0 ? 0 : (page - 1) * pageSize + 1}
-        </span>{" "}
-        -{" "}
-        <span className="font-medium">
-          {Math.min(page * pageSize, total)}
-        </span>{" "}
-        of <span className="font-medium">{total}</span>
-      </div>
+//       <div className="text-gray-600">
+//         Page <span className="font-medium">{page}</span> / {totalPages} • Showing{" "}
+//         <span className="font-medium">
+//           {total === 0 ? 0 : (page - 1) * pageSize + 1}
+//         </span>{" "}
+//         -{" "}
+//         <span className="font-medium">
+//           {Math.min(page * pageSize, total)}
+//         </span>{" "}
+//         of <span className="font-medium">{total}</span>
+//       </div>
 
-      <button
-        onClick={() => canNext && onPageChange(page + 1)}
-        disabled={!canNext}
-        className={`px-3 py-1 rounded border ${canNext ? "bg-white hover:bg-gray-50" : "bg-gray-100 text-gray-400"}`}
-      >
-        Next
-      </button>
-    </div>
-  );
-}
+//       <button
+//         onClick={() => canNext && onPageChange(page + 1)}
+//         disabled={!canNext}
+//         className={`px-3 py-1 rounded border ${canNext ? "bg-white hover:bg-gray-50" : "bg-gray-100 text-gray-400"}`}
+//       >
+//         Next
+//       </button>
+//     </div>
+//   );
+// }
 
 export default function TransactionsTable() {
   // Server-side pagination state
@@ -319,13 +319,12 @@ export default function TransactionsTable() {
   if (loading) return <div className="text-sm text-gray-500 p-4">Loading…</div>;
   if (err)     return <div className="text-sm text-red-600 p-4">{err}</div>;
   if (!total || !pageRows.length) return <div className="text-sm text-gray-500 p-4">No transactions found.</div>;
-
-  return (
+    return (
     <div className="w-full">
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="text-left text-gray-600 border-b">
+            <tr className="text-left text-slate-600 border-b bg-cyan-50">
               <th className="py-2 pr-3">Transaction ID</th>
               <th className="py-2 pr-3">From Wallet</th>
               <th className="py-2 pr-3">To Wallet</th>
@@ -337,13 +336,13 @@ export default function TransactionsTable() {
           </thead>
           <tbody>
             {pageRows.map((r) => (
-              <tr key={r.transactionId ?? r.transactionID ?? Math.random()} className="border-b last:border-0">
+              <tr key={r.transactionId ?? r.transactionID ?? Math.random()} className="border-b last:border-0 hover:bg-cyan-50/50">
                 <td className="py-2 pr-3">TXN{r.transactionId ?? r.transactionID ?? "-"}</td>
                 <td className="py-2 pr-3">{r.fromWalletId ?? r.fromWalletID ?? "-"}</td>
                 <td className="py-2 pr-3">{r.toWalletId ?? r.toWalletID ?? "-"}</td>
                 <td className="py-2 pr-3">{formatCurrency(r.amount, r.currency)}</td>
                 <td className="py-2 pr-3">
-                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5">
+                  <span className="inline-flex items-center rounded-full bg-cyan-50 text-cyan-700 px-2 py-0.5">
                     {r.transactionType}
                   </span>
                 </td>
@@ -351,10 +350,10 @@ export default function TransactionsTable() {
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-0.5 ${
                       (r.status || "").toLowerCase() === "completed"
-                        ? "bg-indigo-700 text-white"
+                        ? "bg-emerald-600 text-white"
                         : (r.status || "").toLowerCase() === "initiated"
                         ? "bg-yellow-100 text-yellow-800"
-                        : "bg-gray-100 text-gray-800"
+                        : "bg-slate-100 text-slate-800"
                     }`}
                   >
                     {r.status}
@@ -378,3 +377,47 @@ export default function TransactionsTable() {
     </div>
   );
 }
+
+// TransactionsTable.jsx (only classes changed)
+function Pager({ page, pageSize, total, onPageChange }) {
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const canPrev = page > 1;
+  const canNext = page < totalPages;
+
+  return (
+    <div className="flex items-center justify-between mt-3 text-sm">
+      <button
+        onClick={() => canPrev && onPageChange(page - 1)}
+        disabled={!canPrev}
+        className={`px-3 py-1 rounded border ${
+          canPrev ? "bg-white border-cyan-200 hover:bg-cyan-50" : "bg-slate-100 text-slate-400 border-slate-200"
+        }`}
+      >
+        Previous
+      </button>
+
+      <div className="text-slate-600">
+        Page <span className="font-medium">{page}</span> / {totalPages} • Showing{" "}
+        <span className="font-medium">
+          {total === 0 ? 0 : (page - 1) * pageSize + 1}
+        </span>{" "}
+        -{" "}
+        <span className="font-medium">
+          {Math.min(page * pageSize, total)}
+        </span>{" "}
+        of <span className="font-medium">{total}</span>
+      </div>
+
+      <button
+        onClick={() => canNext && onPageChange(page + 1)}
+        disabled={!canNext}
+        className={`px-3 py-1 rounded border ${
+          canNext ? "bg-white border-cyan-200 hover:bg-cyan-50" : "bg-slate-100 text-slate-400 border-slate-200"
+        }`}
+      >
+        Next
+      </button>
+    </div>
+  );
+}
+

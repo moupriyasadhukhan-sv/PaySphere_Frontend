@@ -1,6 +1,6 @@
 // src/components/dashboard/SummaryCards.jsx
 import { useEffect, useState } from "react";
-import http from "../../services/http";
+import { api } from "../../services/http";
 export default function SummaryCards() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalMerchants, setTotalMerchants] = useState(0);
@@ -9,7 +9,7 @@ export default function SummaryCards() {
     let mounted = true;
 
     // Total Users from paged endpoint
-    http
+    api
       .get("/api/Users", { params: { role: "User", page: 1, pageSize: 1 } })
       .then((res) => {
         if (mounted) setTotalUsers(res?.data?.total ?? 0);
@@ -17,7 +17,7 @@ export default function SummaryCards() {
       .catch(console.error);
 
     // Total Merchants (backend returns all for now)
-    http
+    api
       .get("/api/Merchant")
       .then((res) => {
         const data = Array.isArray(res?.data?.data) ? res.data.data : [];

@@ -492,7 +492,7 @@
 //   "items": [ { transactionID, fromWalletID, ... } ]
 // }
 
-import http from "../http";
+import { api } from "../http";
 
 /**
  * Fetch a page of transactions directly from the backend.
@@ -501,7 +501,7 @@ import http from "../http";
  * @returns {Promise<{items: any[], totalCount: number, page: number, pageSize: number}>}
  */
 export async function getTransactionsSimple(page = 1, pageSize = 10) {
-  const res = await http.get("/api/Transactions", { params: { page, pageSize } });
+  const res = await api.get("/api/Transactions", { params: { page, pageSize } });
 
   // Accept both exact swagger shape and slight variations
   const data = res?.data || {};

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import http from "../../services/http";
+import { api } from "../../services/http";
 
 export default function ShowLimit() {
   const { userId } = useParams();
@@ -14,7 +14,7 @@ export default function ShowLimit() {
     setLoading(true);
     setError("");
 
-    http.get("/api/limits", { params: { userId } })
+    api.get("/api/limits", { params: { userId } })
       .then((res) => {
         if (!mounted) return;
         const data = res?.data?.data;

@@ -1,8 +1,8 @@
 import LogoutButton from "../../common/LogoutButton";
-import { useAuth } from "../../context/AuthContext";
+//import { useAuth } from "../../context/AuthContext";
 
 export default function OpsAdminDashboard() {
-  const { auth } = useAuth();
+  //const { auth } = useAuth();
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="w-full px-6 py-3 bg-white border-b flex items-center justify-between">

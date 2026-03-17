@@ -480,7 +480,7 @@
 
 // src/components/audit/AuditLogsTable.jsx
 import { useEffect, useMemo, useState, useRef } from "react";
-import http from "../../services/http";
+import { api } from "../../services/http";
 
 const PAGE_SIZE = 10;          // fixed, as requested
 const MAX_PAGES_TO_FETCH = 100; // safety cap
@@ -513,7 +513,7 @@ export default function AuditLogsTable() {
         qs.set("pageNumber", String(pageNumber));
         qs.set("pageSize", String(PAGE_SIZE));
 
-        const res = await http.get(`/api/AuditLogs?${qs.toString()}`);
+        const res = await api.get(`/api/AuditLogs?${qs.toString()}`);
         const body = res?.data;
 
         let pageRows = [];
@@ -600,110 +600,191 @@ export default function AuditLogsTable() {
     }
   };
 
-  return (
-    <div className="space-y-3">
-      {/* Header + filters */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">Audit Logs</h2>
-          <p className="text-sm text-gray-500">System audit trail</p>
-        </div>
+//   return (
+//     <div className="space-y-3">
+//       {/* Header + filters */}
+//       <div className="flex items-center justify-between">
+//         <div>
+//           <h2 className="text-lg font-semibold">Audit Logs</h2>
+//           <p className="text-sm text-gray-500">System audit trail</p>
+//         </div>
 
-        <div className="flex flex-wrap items-end gap-2">
-          <div className="flex flex-col">
-            <label className="text-xs text-gray-600">User ID</label>
-            <input
-              className="border rounded-md px-2 py-1 text-sm"
-              placeholder="e.g. 43"
-              value={filterUserId}
-              onChange={(e) => setFilterUserId(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-xs text-gray-600">Action</label>
-            <input
-              className="border rounded-md px-2 py-1 text-sm"
-              placeholder='e.g. "Logout"'
-              value={filterAction}
-              onChange={(e) => setFilterAction(e.target.value)}
-            />
-          </div>
-        </div>
+//         <div className="flex flex-wrap items-end gap-2">
+//           <div className="flex flex-col">
+//             <label className="text-xs text-gray-600">User ID</label>
+//             <input
+//               className="border rounded-md px-2 py-1 text-sm"
+//               placeholder="e.g. 43"
+//               value={filterUserId}
+//               onChange={(e) => setFilterUserId(e.target.value)}
+//             />
+//           </div>
+//           <div className="flex flex-col">
+//             <label className="text-xs text-gray-600">Action</label>
+//             <input
+//               className="border rounded-md px-2 py-1 text-sm"
+//               placeholder='e.g. "Logout"'
+//               value={filterAction}
+//               onChange={(e) => setFilterAction(e.target.value)}
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Table */}
+//       <div className="overflow-auto border rounded-xl">
+//         <table className="min-w-full text-sm">
+//           <thead className="bg-gray-50">
+//             <tr className="text-left">
+//               <th className="px-4 py-3">Audit ID</th>
+//               <th className="px-4 py-3">User ID</th>
+//               <th className="px-4 py-3">Action</th>
+//               <th className="px-4 py-3">Timestamp (Local)</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {loading && (
+//               <tr>
+//                 <td colSpan={HEAD_COLS} className="px-4 py-6 text-gray-500">
+//                   Loading audit logs…
+//                 </td>
+//               </tr>
+//             )}
+
+//             {!loading && error && (
+//               <tr>
+//                 <td colSpan={HEAD_COLS} className="px-4 py-6 text-red-600">
+//                   {error}
+//                 </td>
+//               </tr>
+//             )}
+
+//             {!loading && !error && current.length === 0 && (
+//               <tr>
+//                 <td colSpan={HEAD_COLS} className="px-4 py-6 text-gray-500">
+//                   No audit records found.
+//                 </td>
+//               </tr>
+//             )}
+
+//             {!loading &&
+//               !error &&
+//               current.map((row) => (
+//                 <tr key={row.auditId ?? `${row.userId}-${row.timestampUtc}`} className="border-t">
+//                   <td className="px-4 py-3 whitespace-nowrap">{row.auditId ?? "—"}</td>
+//                   <td className="px-4 py-3 whitespace-nowrap">{row.userId ?? "—"}</td>
+//                   <td className="px-4 py-3">{row.action ?? "—"}</td>
+//                   <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
+//                 </tr>
+//               ))}
+//           </tbody>
+//         </table>
+//       </div>
+
+//       {/* Pager */}
+//       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
+//         <span className="text-sm text-gray-600">
+//           Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+//         </span>
+
+//         <div className="flex items-center gap-3">
+//           <button
+//             className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+//             disabled={!canPrev}
+//             onClick={onPrev}
+//           >
+//             Previous
+//           </button>
+//           <button
+//             className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+//             disabled={!canNext}
+//             onClick={onNext}
+//           >
+//             Next
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+return (
+  <div className="space-y-3">
+    <div className="flex items-center justify-between">
+      <div>
+        <h2 className="text-lg font-semibold">Audit Logs</h2>
+        <p className="text-sm text-slate-500">System audit trail</p>
       </div>
 
-      {/* Table */}
-      <div className="overflow-auto border rounded-xl">
-        <table className="min-w-full text-sm">
-          <thead className="bg-gray-50">
-            <tr className="text-left">
-              <th className="px-4 py-3">Audit ID</th>
-              <th className="px-4 py-3">User ID</th>
-              <th className="px-4 py-3">Action</th>
-              <th className="px-4 py-3">Timestamp (Local)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading && (
-              <tr>
-                <td colSpan={HEAD_COLS} className="px-4 py-6 text-gray-500">
-                  Loading audit logs…
-                </td>
-              </tr>
-            )}
-
-            {!loading && error && (
-              <tr>
-                <td colSpan={HEAD_COLS} className="px-4 py-6 text-red-600">
-                  {error}
-                </td>
-              </tr>
-            )}
-
-            {!loading && !error && current.length === 0 && (
-              <tr>
-                <td colSpan={HEAD_COLS} className="px-4 py-6 text-gray-500">
-                  No audit records found.
-                </td>
-              </tr>
-            )}
-
-            {!loading &&
-              !error &&
-              current.map((row) => (
-                <tr key={row.auditId ?? `${row.userId}-${row.timestampUtc}`} className="border-t">
-                  <td className="px-4 py-3 whitespace-nowrap">{row.auditId ?? "—"}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">{row.userId ?? "—"}</td>
-                  <td className="px-4 py-3">{row.action ?? "—"}</td>
-                  <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pager */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
-        <span className="text-sm text-gray-600">
-          Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
-        </span>
-
-        <div className="flex items-center gap-3">
-          <button
-            className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-            disabled={!canPrev}
-            onClick={onPrev}
-          >
-            Previous
-          </button>
-          <button
-            className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-            disabled={!canNext}
-            onClick={onNext}
-          >
-            Next
-          </button>
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="flex flex-col">
+          <label className="text-xs text-slate-600">User ID</label>
+          <input
+            className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+            placeholder="e.g. 43"
+            value={filterUserId}
+            onChange={(e) => setFilterUserId(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="text-xs text-slate-600">Action</label>
+          <input
+            className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+            placeholder='e.g. "Logout"'
+            value={filterAction}
+            onChange={(e) => setFilterAction(e.target.value)}
+          />
         </div>
       </div>
     </div>
-  );
+
+    <div className="overflow-auto border border-cyan-100 rounded-xl">
+      <table className="min-w-full text-sm">
+        <thead className="bg-cyan-50">
+          <tr className="text-left">
+            <th className="px-4 py-3">Audit ID</th>
+            <th className="px-4 py-3">User ID</th>
+            <th className="px-4 py-3">Action</th>
+            <th className="px-4 py-3">Timestamp (Local)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* ...loading/error/empty unchanged */}
+          {!loading && !error && current.map((row) => (
+            <tr key={row.auditId ?? `${row.userId}-${row.timestampUtc}`} className="border-t hover:bg-cyan-50/50">
+              <td className="px-4 py-3 whitespace-nowrap">{row.auditId ?? "—"}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{row.userId ?? "—"}</td>
+              <td className="px-4 py-3">{row.action ?? "—"}</td>
+              <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
+      <span className="text-sm text-slate-600">
+        Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+      </span>
+
+      <div className="flex items-center gap-3">
+        <button
+          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          disabled={!canPrev}
+          onClick={onPrev}
+        >
+          Previous
+        </button>
+        <button
+          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          disabled={!canNext}
+          onClick={onNext}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+);
 }

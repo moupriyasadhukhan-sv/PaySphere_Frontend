@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import http from "../../services/http";
+import { api } from "../../services/http";
 
 function useQuery() {
   const { search } = useLocation();
@@ -40,7 +40,7 @@ export default function CreateLimit() {
         dailyLimit: Number(form.dailyLimit || 0),
         monthlyLimit: Number(form.monthlyLimit || 0),
       };
-      await http.post("/api/limits", payload); // <-- DB update happens here
+      await api.post("/api/limits", payload); // <-- DB update happens here
 
       navigate(`/limits/${encodeURIComponent(form.userID)}`, { replace: true });
       // or: navigate("/dashboard/admin"); // if you want to go straight back to dashboard

@@ -1,7 +1,7 @@
 // src/pages/Dashboards/RegisterStaff.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import http from "../../services/http"; // your axios instance
+import { api } from "../../services/http";
 
 const ROLES = ["Ops", "Risk"]; // adjust if needed
 
@@ -28,7 +28,7 @@ export default function RegisterStaff() {
     setSubmitting(true);
     try {
       // POST /api/Auth/Admin-register
-      await http.post("/api/Auth/Admin-register", form);
+      await api.post("/api/Auth/Admin-register", form);
       // success -> go back to old-scheme dashboard path
       //navigate("/dashboard/admin", { replace: true });
     } catch (err) {
