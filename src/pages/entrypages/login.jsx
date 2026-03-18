@@ -800,6 +800,306 @@
 
 
 
+// import { useState } from "react";
+// import { useNavigate, Link } from "react-router-dom";
+// import { loginUser } from "../../services/authservices/authService";
+// import Modal from "../../common/Modal";
+// import { useDispatch } from "react-redux";
+// import { setCredentials } from "../../stores/authSlice";
+
+// // Normalize role string
+// function normalizeRole(roleRaw) {
+//   const r = String(roleRaw || "").trim().toLowerCase();
+//   const normalized = r.replaceAll("_", "-");
+//   if (normalized === "opsadmin") return "ops-admin";
+//   return normalized;
+// }
+
+// // Map role → route
+// const ROLE_TO_PATH = {
+//   user: "/dashboard/user",
+//   merchant: "/dashboard/merchant",
+//   admin: "/dashboard/admin",
+//   risk: "/dashboard/risk",
+//   ops: "/dashboard/ops",
+//   "ops-admin": "/dashboard/ops-admin",
+// };
+
+// const initial = { email: "", password: "", role: "" };
+
+// export default function Login() {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const [data, setData] = useState(initial);
+//   const [errors, setErrors] = useState({});
+//   const [submitting, setSubmitting] = useState(false);
+
+//   // Forgot password modal
+//   const [forgotOpen, setForgotOpen] = useState(false);
+//   const [forgotEmail, setForgotEmail] = useState("");
+//   const [sending, setSending] = useState(false);
+//   const [sentMsg, setSentMsg] = useState("");
+//   const [sendErr, setSendErr] = useState("");
+
+//   // Validate input
+//   const validate = () => {
+//     const e = {};
+//     if (!data.email) e.email = "Email is required.";
+//     else if (!/^\S+@\S+\.\S+$/.test(data.email)) e.email = "Invalid email address.";
+
+//     if (!data.password) e.password = "Password is required.";
+//     else if (data.password.length < 6) e.password = "Minimum 6 characters.";
+
+//     if (!data.role) e.role = "Role is required.";
+
+//     return e;
+//   };
+
+//   const handleChange = (ev) => {
+//     const { name, value } = ev.target;
+//     setData((p) => ({ ...p, [name]: value }));
+//     setErrors((p) => ({ ...p, [name]: "" }));
+//   };
+
+//   // Submit login
+//   const handleSubmit = async (ev) => {
+//     ev.preventDefault();
+
+//     const e = validate();
+//     setErrors(e);
+//     if (Object.keys(e).length) return;
+
+//     try {
+//       setSubmitting(true);
+
+//       const res = await loginUser({
+//         email: data.email,
+//         password: data.password,
+//         role: data.role,
+//       });
+
+//       // Backend validation
+//       if (!res.data?.accessToken) {
+//         alert(res.data?.message || "Invalid login.");
+//         return;
+//       }
+
+//       // Save to Redux
+//       dispatch(
+//         setCredentials({
+//           accessToken: res.data.accessToken,
+//           role: data.role,
+//         })
+//       );
+
+//       // Route by role
+//       const path = ROLE_TO_PATH[normalizeRole(data.role)] || "/dashboard";
+//       navigate(path);
+
+//     } catch (err) {
+//       const msg =
+//         err?.response?.data?.message ||
+//         err?.response?.data?.title ||
+//         "Login failed!";
+//       alert(msg);
+//     } finally {
+//       setSubmitting(false);
+//     }
+//   };
+
+//   // Forgot password modal
+//   const openForgot = () => {
+//     setSendErr("");
+//     setSentMsg("");
+//     setForgotEmail(data.email || "");
+//     setForgotOpen(true);
+//   };
+
+//   const closeForgot = () => {
+//     if (!sending) setForgotOpen(false);
+//   };
+
+//   const isValidEmail = (v) =>
+//     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || "").trim());
+
+//   const sendResetLink = async () => {
+//     const email = (forgotEmail || "").trim();
+
+//     setSendErr("");
+//     setSentMsg("");
+
+//     if (!isValidEmail(email)) {
+//       setSendErr("Please enter a valid email address.");
+//       return;
+//     }
+
+//     try {
+//       setSending(true);
+//       await http.post("/api/AuthMail/send-reset-link", { email });
+//       setSentMsg("If this email is registered, a reset link has been sent.");
+//     } catch (e) {
+//       const msg =
+//         e?.response?.data?.message ||
+//         e?.response?.data ||
+//         e?.message ||
+//         "Failed to send reset link.";
+//       setSendErr(String(msg));
+//     } finally {
+//       setSending(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+//       <div className="w-full max-w-md">
+//         <div className="bg-white rounded-xl shadow border p-6 sm:p-8">
+//           <div className="flex flex-col items-center">
+//             <h1 className="text-2xl font-semibold text-slate-900">Welcome Back</h1>
+//             <p className="text-sm text-slate-500 mt-1">
+//               Sign in to your PaySphere account
+//             </p>
+//           </div>
+
+//           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+
+//             {/* Email */}
+//             <div>
+//               <label className="block text-sm font-medium text-slate-700 mb-1">
+//                 Email
+//               </label>
+//               <input
+//                 type="email"
+//                 name="email"
+//                 placeholder="you@example.com"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.email ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.email}
+//                 onChange={handleChange}
+//               />
+//               {errors.email && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+//               )}
+//             </div>
+
+//             {/* Password */}
+//             <div>
+//               <div className="flex items-center justify-between">
+//                 <label className="block text-sm font-medium">Password</label>
+//                 <button
+//                   type="button"
+//                   onClick={openForgot}
+//                   className="text-sm text-indigo-600"
+//                 >
+//                   Forgot password?
+//                 </button>
+//               </div>
+
+//               <input
+//                 type="password"
+//                 name="password"
+//                 placeholder="••••••••"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.password ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.password}
+//                 onChange={handleChange}
+//               />
+
+//               {errors.password && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+//               )}
+//             </div>
+
+//             {/* Role */}
+//             <div>
+//               <label className="block text-sm font-medium">Login As</label>
+//               <select
+//                 name="role"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.role ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.role}
+//                 onChange={handleChange}
+//               >
+//                 <option value="">Select Role</option>
+//                 <option value="User">User</option>
+//                 <option value="Merchant">Merchant</option>
+//                 <option value="Admin">Admin</option>
+//                 <option value="Risk">Risk</option>
+//                 <option value="Ops">Ops</option>
+//               </select>
+
+//               {errors.role && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.role}</p>
+//               )}
+//             </div>
+
+//             {/* Submit */}
+//             <button
+//               type="submit"
+//               disabled={submitting}
+//               className="w-full rounded-lg bg-indigo-600 text-white py-2.5"
+//             >
+//               {submitting ? "Signing in..." : "Sign In"}
+//             </button>
+//           </form>
+//         </div>
+//       </div>
+
+//       {/* Forgot Password Modal */}
+//       <Modal
+//         open={forgotOpen}
+//         title="Reset your password"
+//         onClose={closeForgot}
+//         footer={
+//           <>
+//             <button
+//               type="button"
+//               onClick={closeForgot}
+//               className="px-3 py-1.5 border rounded-md"
+//               disabled={sending}
+//             >
+//               Close
+//             </button>
+//             <button
+//               type="button"
+//               onClick={sendResetLink}
+//               className={`px-3 py-1.5 rounded-md text-white ${
+//                 sending ? "bg-gray-400" : "bg-indigo-600"
+//               }`}
+//               disabled={sending}
+//             >
+//               {sending ? "Sending…" : "Send reset link"}
+//             </button>
+//           </>
+//         }
+//       >
+//         <p className="text-sm text-slate-600">
+//           Enter your account email and we will send you a password reset link.
+//         </p>
+
+//         <input
+//           type="email"
+//           placeholder="you@example.com"
+//           className={`w-full p-2.5 rounded-lg border ${
+//             sendErr ? "border-red-500" : "border-slate-300"
+//           }`}
+//           value={forgotEmail}
+//           onChange={(e) => setForgotEmail(e.target.value)}
+//         />
+
+//         {sendErr && <p className="text-red-600 text-sm mt-1">{sendErr}</p>}
+//         {sentMsg && (
+//           <p className="text-green-600 text-sm mt-2">{sentMsg}</p>
+//         )}
+//       </Modal>
+//     </div>
+//   );
+// }
+
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../../services/authservices/authService";
@@ -885,11 +1185,20 @@ export default function Login() {
         return;
       }
 
+      const backendRole = normalizeRole(res.data.role);
+      const selectedRole = normalizeRole(data.role);
+
+      if (backendRole !== selectedRole) {
+        alert(`Role mismatch! You cannot login as ${data.role}.`);
+        return;
+      }
+
+
       // Save to Redux
       dispatch(
         setCredentials({
           accessToken: res.data.accessToken,
-          role: data.role,
+          role:  res.data.role,
         })
       );
 
