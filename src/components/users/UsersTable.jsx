@@ -462,6 +462,8 @@ return (
             <th className="px-4 py-3">Balance</th>
             <th className="px-4 py-3">Create Limit</th>
             <th className="px-4 py-3">Show Limit</th>
+            <th className="px-4 py-3">Update Limit</th>
+
           </tr>
         </thead>
         <tbody>
@@ -520,6 +522,20 @@ return (
                     Show Limit
                   </button>
                 </td>
+
+                <td className="px-4 py-3">
+                  {r.limitId ? (
+                    <button
+                      onClick={() => navigate(`/dashboard/admin/limits/update/${r.limitId}`)}
+                      className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
+                    >
+                      Update Limit
+                    </button>
+                  ) : (
+                    <span className="text-slate-400 italic text-xs">No limit set</span>
+                  )}
+                </td>
+
               </tr>
             ))}
         </tbody>

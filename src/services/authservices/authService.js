@@ -10,12 +10,13 @@ export const registerUser = (data) =>
 
 // Login (uses minimal API + refresh cookie)
 export function loginUser(payload) {
-  return authClient.post("/auth/login", payload); 
+
+  return authClient.post("/auth/login", payload);
 }
 
 // Logout (deletes refresh cookie)
 export function logoutUser() {
-  return authClient.post("/auth/logout");
+  return authClient.post("/api/Auth/logout");
 }
 // import { http, authClient } from "../http";
 

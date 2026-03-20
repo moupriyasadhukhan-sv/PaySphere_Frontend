@@ -160,6 +160,7 @@ import Registration from "../pages/entrypages/registration";
 // Feature pages
 import ShowLimit from "../pages/Limits/ShowLimit";
 import CreateLimit from "../pages/Limits/CreateLimit";
+import UpdateLimit from "../pages/Limits/UpdateLimit";
 
 import MerchantSettlements from "../pages/settlements/MerchantSettlements";
 // Landing (public)
@@ -183,7 +184,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/admin"
         element={
-          <ProtectedRoute allowedRoles={["Admin"]}>
+          <ProtectedRoute allowedRoles={["admin"]}>
             <AdminDashboard />
           </ProtectedRoute>
         }
@@ -195,6 +196,7 @@ export default function AppRoutes() {
         <Route path="limits">
           <Route path="create" element={<CreateLimit />} />
           <Route path=":userId" element={<ShowLimit />} />
+          
         </Route>
         <Route path="settlements/merchant/:merchantId" element={<MerchantSettlements />} />
       
@@ -204,7 +206,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/merchant"
         element={
-          <ProtectedRoute allowedRoles={["Merchant"]}>
+          <ProtectedRoute allowedRoles={["merchant"]}>
             <MerchantDashboard />
           </ProtectedRoute>
         }
@@ -213,7 +215,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/ops"
         element={
-          <ProtectedRoute allowedRoles={["Ops"]}>
+          <ProtectedRoute allowedRoles={["ops"]}>
             <OpsDashboard />
           </ProtectedRoute>
         }
@@ -222,7 +224,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/ops-admin"
         element={
-          <ProtectedRoute allowedRoles={["Admin", "Ops"]}>
+          <ProtectedRoute allowedRoles={["admin", "ops"]}>
             <OpsAdminDashboard />
           </ProtectedRoute>
         }
@@ -231,7 +233,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/risk"
         element={
-          <ProtectedRoute allowedRoles={["Risk"]}>
+          <ProtectedRoute allowedRoles={["risk"]}>
             <RiskDashboard />
           </ProtectedRoute>
         }
@@ -240,7 +242,7 @@ export default function AppRoutes() {
       <Route
         path="/dashboard/user"
         element={
-          <ProtectedRoute allowedRoles={["User"]}>
+          <ProtectedRoute allowedRoles={["user"]}>
             <UserDashboard />
           </ProtectedRoute>
         }
