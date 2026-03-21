@@ -194,8 +194,12 @@ export default function AppRoutes() {
 
         {/* Limits nested group: /dashboard/admin/limits/create and /dashboard/admin/limits/:userId */}
         <Route path="limits">
+          {/* <Route path="create" element={<CreateLimit />} />
+          <Route path=":userId" element={<ShowLimit />} /> */}
           <Route path="create" element={<CreateLimit />} />
+          <Route path="update/:limitId" element={<UpdateLimit />} />   {/* <-- ADD THIS */}
           <Route path=":userId" element={<ShowLimit />} />
+
           
         </Route>
         <Route path="settlements/merchant/:merchantId" element={<MerchantSettlements />} />

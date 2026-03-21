@@ -18,13 +18,10 @@ export default function ShowLimit() {
       .then((res) => {
         if (!mounted) return;
         const data = res?.data?.data;
-        const first = Array.isArray(data) ? data[0] : data;
-        setLimit(first ?? null);
+        const only = Array.isArray(data) ? data[0] : data;
+        setLimit(only ?? null);
       })
-      .catch((e) => {
-        console.error(e);
-        setError("Failed to fetch limits");
-      })
+      .catch(() => setError("Failed to fetch limits"))
       .finally(() => mounted && setLoading(false));
 
     return () => { mounted = false; };
@@ -36,11 +33,15 @@ export default function ShowLimit() {
         <h2 className="text-xl font-semibold">User Limits</h2>
         <div className="flex gap-2">
           <button
-            onClick={() => navigate(`/limits/create?userId=${encodeURIComponent(userId)}`)}
+            onClick={() => {
+              if (limit) navigate(`/dashboard/admin/limits/update/${limit.limitID}`);
+              else navigate(`/dashboard/admin/limits/create?userId=${userId}`);
+            }}
             className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600"
           >
-            Create / Update Limit
+            {limit ? "Update Limit" : "Create Limit"}
           </button>
+
           <button
             onClick={() => navigate(-1)}
             className="px-3 py-1.5 rounded-md border hover:bg-slate-50"
@@ -53,12 +54,15 @@ export default function ShowLimit() {
       <div className="rounded-lg border bg-white p-4">
         {loading && <p className="text-slate-600">Loading…</p>}
         {!loading && error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && !limit && <p className="text-slate-600">No limit found for user {userId}.</p>}
-        {!loading && !error && limit && (
+        {!loading && !error && !limit && (
+          <p className="text-slate-600">No limit found for user {userId}.</p>
+        )}
+
+        {!loading && limit && (
           <div className="space-y-2">
-            <div><span className="font-medium">User ID:</span> {limit.userID ?? userId}</div>
-            <div><span className="font-medium">Daily Limit:</span> {limit.dailyLimit}</div>
-            <div><span className="font-medium">Monthly Limit:</span> {limit.monthlyLimit}</div>
+            <div><b>User ID:</b> {limit.userID}</div>
+            <div><b>Daily Limit:</b> {limit.dailyLimit}</div>
+            <div><b>Monthly Limit:</b> {limit.monthlyLimit}</div>
           </div>
         )}
       </div>

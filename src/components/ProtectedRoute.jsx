@@ -1,19 +1,68 @@
 // ProtectedRoute.jsx
 
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { refreshAccessToken } from "../services/authservices/authService";
+import { setCredentials, logout } from "../stores/authSlice";
 
 export default function ProtectedRoute({ children }) {
-  // Read accessToken from Redux store
   const token = useSelector((state) => state.auth.accessToken);
+  const role  = useSelector((state) => state.auth.role);
 
-  // If no token → user is not authenticated
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkSession() {
+      if (!token) {
+        // Try silent refresh
+        const newToken = await refreshAccessToken();
+
+        if (newToken) {
+          dispatch(setCredentials({ accessToken: newToken, role }));
+        } else {
+          dispatch(logout());
+          navigate("/login", { replace: true });
+        }
+      }
+
+      setLoading(false);
+    }
+
+    checkSession();
+  }, [token]);
+
+  // Show nothing while refreshing
+  if (loading) return null;
+
+  if (!token) return <Navigate to="/login" replace />;
 
   return children;
 }
+
+
+
+
+
+
+// import { useSelector } from "react-redux";
+// import { Navigate } from "react-router-dom";
+
+// export default function ProtectedRoute({ children }) {
+//   // Read accessToken from Redux store
+//   const token = useSelector((state) => state.auth.accessToken);
+
+//   // If no token → user is not authenticated
+//   if (!token) {
+//     return <Navigate to="/login" replace />;
+//   }
+
+//   return children;
+// }
 
 
 

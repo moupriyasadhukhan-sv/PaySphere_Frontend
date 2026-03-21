@@ -78,136 +78,332 @@ export default function Register() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-xl shadow border border-gray-100 p-6 sm:p-8">
-          <div className="flex flex-col items-center">
-            <div className="h-12 w-12 rounded-full bg-indigo-600/10 text-indigo-600 flex items-center justify-center mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.943 0 1.833.333 2.53.94A3.5 3.5 0 1112 11z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 21a7.5 7.5 0 10-15 0h15z" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-semibold">Create Account</h1>
-            <p className="text-sm text-gray-500 mt-1">Register for a new PaySphere account</p>
-          </div>
+//   return (
+//     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+//       <div className="w-full max-w-md">
+//         <div className="bg-white rounded-xl shadow border border-gray-100 p-6 sm:p-8">
+//           <div className="flex flex-col items-center">
+//             <div className="h-12 w-12 rounded-full bg-indigo-600/10 text-indigo-600 flex items-center justify-center mb-3">
+//               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+//                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.943 0 1.833.333 2.53.94A3.5 3.5 0 1112 11z" />
+//                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 21a7.5 7.5 0 10-15 0h15z" />
+//               </svg>
+//             </div>
+//             <h1 className="text-2xl font-semibold">Create Account</h1>
+//             <p className="text-sm text-gray-500 mt-1">Register for a new PaySphere account</p>
+//           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                placeholder="John Doe"
-                className={`w-full p-2.5 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.name}
-                onChange={handleChange}
-              />
-              {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
-            </div>
+//           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+//               <input
+//                 type="text"
+//                 name="name"
+//                 placeholder="John Doe"
+//                 className={`w-full p-2.5 rounded-lg border ${errors.name ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.name}
+//                 onChange={handleChange}
+//               />
+//               {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+//             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="you@example.com"
-                className={`w-full p-2.5 rounded-lg border ${errors.email ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
-            </div>
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+//               <input
+//                 type="email"
+//                 name="email"
+//                 placeholder="you@example.com"
+//                 className={`w-full p-2.5 rounded-lg border ${errors.email ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.email}
+//                 onChange={handleChange}
+//               />
+//               {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+//             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Create a password"
-                className={`w-full p-2.5 rounded-lg border ${errors.password ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
-            </div>
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+//               <input
+//                 type="password"
+//                 name="password"
+//                 placeholder="Create a password"
+//                 className={`w-full p-2.5 rounded-lg border ${errors.password ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.password}
+//                 onChange={handleChange}
+//               />
+//               {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
+//             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Retype password"
-                className={`w-full p-2.5 rounded-lg border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-              {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                placeholder="9876543210"
-                className={`w-full p-2.5 rounded-lg border ${errors.phone ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.phone}
-                onChange={handleChange}
-              />
-              {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
-            </div>
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+//               <input
+//                 type="password"
+//                 name="confirmPassword"
+//                 placeholder="Retype password"
+//                 className={`w-full p-2.5 rounded-lg border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.confirmPassword}
+//                 onChange={handleChange}
+//               />
+//               {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
+//             </div>
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+//               <input
+//                 type="text"
+//                 name="phone"
+//                 placeholder="9876543210"
+//                 className={`w-full p-2.5 rounded-lg border ${errors.phone ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.phone}
+//                 onChange={handleChange}
+//               />
+//               {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
+//             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
-              <select
-                name="role"
-                className={`w-full p-2.5 rounded-lg border bg-white ${errors.role ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                value={formData.role}
-                onChange={handleChange}
-              >
-                <option value="">Select Role</option>
-                <option value="User">User</option>
-                <option value="Merchant">Merchant</option>
-              </select>
-              {errors.role && <p className="text-red-600 text-sm mt-1">{errors.role}</p>}
-            </div>
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
+//               <select
+//                 name="role"
+//                 className={`w-full p-2.5 rounded-lg border bg-white ${errors.role ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                 value={formData.role}
+//                 onChange={handleChange}
+//               >
+//                 <option value="">Select Role</option>
+//                 <option value="User">User</option>
+//                 <option value="Merchant">Merchant</option>
+//               </select>
+//               {errors.role && <p className="text-red-600 text-sm mt-1">{errors.role}</p>}
+//             </div>
 
-            {formData.role === "Merchant" && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select
-                  name="category"
-                  className={`w-full p-2.5 rounded-lg border bg-white ${errors.category ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Category</option>
-                  {MERCHANT_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                {errors.category && <p className="text-red-600 text-sm mt-1">{errors.category}</p>}
-              </div>
-            )}
+//             {formData.role === "Merchant" && (
+//               <div>
+//                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+//                 <select
+//                   name="category"
+//                   className={`w-full p-2.5 rounded-lg border bg-white ${errors.category ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+//                   value={formData.category}
+//                   onChange={handleChange}
+//                 >
+//                   <option value="">Select Category</option>
+//                   {MERCHANT_CATEGORIES.map((c) => (
+//                     <option key={c} value={c}>{c}</option>
+//                   ))}
+//                 </select>
+//                 {errors.category && <p className="text-red-600 text-sm mt-1">{errors.category}</p>}
+//               </div>
+//             )}
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full inline-flex items-center justify-center rounded-lg bg-indigo-600 text-white font-medium py-2.5 hover:bg-indigo-700 transition disabled:opacity-60"
-            >
-              {submitting ? "Creating..." : "Create Account"}
-            </button>
-          </form>
+//             <button
+//               type="submit"
+//               disabled={submitting}
+//               className="w-full inline-flex items-center justify-center rounded-lg bg-indigo-600 text-white font-medium py-2.5 hover:bg-indigo-700 transition disabled:opacity-60"
+//             >
+//               {submitting ? "Creating..." : "Create Account"}
+//             </button>
+//           </form>
 
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Already have an account?{" "}
-            <Link to="/login" className="text-indigo-600 hover:underline">Sign In</Link>
-          </p>
-        </div>
+//           <p className="text-center text-sm text-gray-600 mt-4">
+//             Already have an account?{" "}
+//             <Link to="/login" className="text-indigo-600 hover:underline">Sign In</Link>
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+    return (
+  <div
+    className="min-h-screen w-full 
+    bg-gradient-to-br from-[#071a3d] via-[#063025] to-[#020a33]
+    flex items-center justify-center px-4 overflow-hidden"
+  >
+    <div className="w-full max-w-xs text-white"> 
+      {/* TITLE */}
+      <div className="text-center mb-5">
+        <h1 className="text-2xl font-bold tracking-wide">Create Account</h1>
+        <p className="text-xs text-gray-300 mt-1">
+          Register for a new PaySphere account
+        </p>
       </div>
+
+      {/* FORM */}
+      <form onSubmit={handleSubmit} className="space-y-3">
+
+        {/* FULL NAME */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Full Name</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="John Doe"
+            className={`
+              w-full mt-1 p-2 rounded-lg
+              bg-gray-200/30 text-white placeholder-gray-300
+              outline-none focus:bg-gray-200/40
+              ${errors.name ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.name}
+            onChange={handleChange}
+          />
+          {errors.name && <p className="text-red-400 text-[11px]">{errors.name}</p>}
+        </div>
+
+        {/* EMAIL */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            className={`
+              w-full mt-1 p-2 rounded-lg 
+              bg-gray-200/30 text-white placeholder-gray-300
+              outline-none focus:bg-gray-200/40
+              ${errors.email ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.email}
+            onChange={handleChange}
+          />
+          {errors.email && <p className="text-red-400 text-[11px]">{errors.email}</p>}
+        </div>
+
+        {/* PASSWORD */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Create a password"
+            className={`
+              w-full mt-1 p-2 rounded-lg 
+              bg-gray-200/30 text-white placeholder-gray-300
+              outline-none focus:bg-gray-200/40
+              ${errors.password ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {errors.password && (
+            <p className="text-red-400 text-[11px]">{errors.password}</p>
+          )}
+        </div>
+
+        {/* CONFIRM PASSWORD */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Retype password"
+            className={`
+              w-full mt-1 p-2 rounded-lg 
+              bg-gray-200/30 text-white placeholder-gray-300
+              outline-none focus:bg-gray-200/40
+              ${errors.confirmPassword ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-400 text-[11px]">{errors.confirmPassword}</p>
+          )}
+        </div>
+
+        {/* PHONE */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="9876543210"
+            className={`
+              w-full mt-1 p-2 rounded-lg 
+              bg-gray-200/30 text-white placeholder-gray-300
+              outline-none focus:bg-gray-200/40
+              ${errors.phone ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          {errors.phone && (
+            <p className="text-red-400 text-[11px]">{errors.phone}</p>
+          )}
+        </div>
+
+        {/* ROLE */}
+        <div>
+          <label className="text-[11px] font-medium text-gray-300">Account Type</label>
+          <select
+            name="role"
+            className={`
+              w-full mt-1 p-2 rounded-lg 
+              bg-gray-200/30 text-white outline-none
+              focus:bg-gray-200/40
+              ${errors.role ? "border border-red-400" : "border-none"}
+            `}
+            value={formData.role}
+            onChange={handleChange}
+          >
+            <option value="" className="text-black">Select Role</option>
+            <option value="User" className="text-black">User</option>
+            <option value="Merchant" className="text-black">Merchant</option>
+          </select>
+
+          {errors.role && (
+            <p className="text-red-400 text-[11px]">{errors.role}</p>
+          )}
+        </div>
+
+        {/* CATEGORY */}
+        {formData.role === "Merchant" && (
+          <div>
+            <label className="text-[11px] font-medium text-gray-300">Category</label>
+            <select
+              name="category"
+              className={`
+                w-full mt-1 p-2 rounded-lg bg-gray-200/30 text-white 
+                outline-none focus:bg-gray-200/40
+                ${errors.category ? "border border-red-400" : "border-none"}
+              `}
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <option value="" className="text-black">Select Category</option>
+              {MERCHANT_CATEGORIES.map((c) => (
+                <option key={c} value={c} className="text-black">
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            {errors.category && (
+              <p className="text-red-400 text-[11px]">{errors.category}</p>
+            )}
+          </div>
+        )}
+
+        {/* SUBMIT */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="
+            w-full py-2 rounded-lg 
+            bg-gradient-to-r from-purple-500 to-blue-600
+            hover:scale-[1.02] transition duration-200
+            text-white text-sm font-semibold shadow-lg disabled:opacity-50
+          "
+        >
+          {submitting ? "Creating…" : "Create Account"}
+        </button>
+      </form>
+
+      <p className="text-center text-gray-300 text-xs mt-3">
+        Already have an account?{" "}
+        <Link to="/login" className="text-purple-300 hover:text-white">
+          Sign In
+        </Link>
+      </p>
+
     </div>
-  );
+  </div>
+);
 }
 
 

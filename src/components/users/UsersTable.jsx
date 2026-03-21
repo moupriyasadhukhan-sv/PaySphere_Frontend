@@ -1,8 +1,229 @@
+// // // src/components/users/UsersTable.jsx
+// // import { useEffect, useState } from "react";
+// // import http from "../../services/http";
+// // import { useNavigate } from "react-router-dom";
+// // const PAGE_SIZE = 2;
+
+// // // simple concurrency limiter
+// // async function mapLimit(items, limit, fn) {
+// //   const res = new Array(items.length);
+// //   let idx = 0;
+// //   let act = 0;
+// //   return new Promise((resolve) => {
+// //     const next = () => {
+// //       if (idx >= items.length && act === 0) return resolve(res);
+// //       while (act < limit && idx < items.length) {
+// //         const i = idx++;
+// //         act++;
+// //         Promise.resolve(fn(items[i], i))
+// //           .then((v) => (res[i] = v))
+// //           .catch(() => (res[i] = null))
+// //           .finally(() => {
+// //             act--;
+// //             next();
+// //           });
+// //       }
+// //     };
+// //     next();
+// //   });
+// // }
+
+// // export default function UsersTable() {
+// //   const [page, setPage] = useState(1);
+// //   const [rows, setRows] = useState([]);
+// //   const [total, setTotal] = useState(0);
+// //   const [totalPages, setTotalPages] = useState(1);
+// //   const [loading, setLoading] = useState(true);
+// //   const navigate = useNavigate();  
+// //   useEffect(() => {
+// //     let mounted = true;
+// //     setLoading(true);
+
+// //     http
+// //       .get("/api/Users", { params: { role: "User", page, pageSize: PAGE_SIZE } })
+// //       .then(async (res) => {
+// //         if (!mounted) return;
+// //         const payload = res?.data;
+// //         const users = Array.isArray(payload?.data) ? payload.data : [];
+// //         setTotal(payload?.total ?? users.length);
+// //         // setTotalPages(payload?.totalPages ?? 1);
+
+// //         setTotalPages(
+// //             Number.isFinite(payload?.totalPages)
+// //                 ? payload.totalPages
+// //                 : Number.isFinite(payload?.total)
+// //                 ? Math.max(1, Math.ceil(payload.total / PAGE_SIZE))
+// //                 : 1
+// //         );
+
+// //         const merged = await mapLimit(users, 6, async (u) => {
+// //           const userId = u.userId ?? u.UserID ?? u.userID;
+// //           try {
+// //             const w = await http.get("/api/Wallets", { params: { userId } });
+// //             const wd = Array.isArray(w?.data?.data) ? w.data.data[0] : (w?.data?.data ?? w?.data);
+// //             return {
+// //               userId,
+// //               name: u.name,
+// //               status: wd?.status ?? "Active",
+// //               balance: wd?.balance ?? 0,
+// //             };
+// //           } catch {
+// //             return { userId, name: u.name, status: "—", balance: 0 };
+// //           }
+// //         });
+
+// //         setRows(merged);
+// //       })
+// //       .catch((e) => {
+// //         console.error(e);
+// //         setRows([]);
+// //       })
+// //       .finally(() => mounted && setLoading(false));
+
+// //     return () => {
+// //       mounted = false;
+// //     };
+// //   }, [page]);
+
+// //   const currency = (n) =>
+// //     new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(n || 0);
+
+// //   return (
+// //     <div>
+// //       <div className="mb-3">
+// //         <h2 className="text-lg font-semibold">User Management</h2>
+// //         <p className="text-sm text-gray-500">View and manage all registered users</p>
+// //       </div>
+
+// //       <div className="overflow-auto border rounded-xl">
+// //         <table className="min-w-full text-sm">
+// //           <thead className="bg-gray-50">
+// //             <tr className="text-left">
+// //               <th className="px-4 py-3">User ID</th>
+// //               <th className="px-4 py-3">Name</th>
+// //               <th className="px-4 py-3">Status</th>
+// //               <th className="px-4 py-3">Balance</th>
+// //               <th className="px-4 py-3">Create Limit</th>
+// //               <th className="px-4 py-3">Show Limit</th>
+// //             </tr>
+// //           </thead>
+// //           <tbody>
+// //             {loading && (
+// //               <tr>
+// //                 <td colSpan={6} className="px-4 py-6 text-gray-500">
+// //                   Loading users…
+// //                 </td>
+// //               </tr>
+// //             )}
+// //             {!loading && rows.length === 0 && (
+// //               <tr>
+// //                 <td colSpan={6} className="px-4 py-6 text-gray-500">
+// //                   No users found.
+// //                 </td>
+// //               </tr>
+// //             )}
+// //             {!loading &&
+// //               rows.map((r) => (
+// //                 <tr key={r.userId} className="border-t">
+// //                   <td className="px-4 py-3">{r.userId}</td>
+// //                   <td className="px-4 py-3">
+// //                     <div className="flex flex-col">
+// //                       <span className="font-medium">{r.name}</span>
+                      
+// //                     </div>
+// //                   </td>
+// //                   <td className="px-4 py-3">
+// //                     <span
+// //                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+// //                         (r.status || "").toLowerCase() === "active"
+// //                           ? "bg-green-100 text-green-700"
+// //                           : "bg-gray-100 text-gray-700"
+// //                       }`}
+// //                     >
+// //                       {r.status}
+// //                     </span>
+// //                   </td>
+// //                   <td className="px-4 py-3">{currency(r.balance)}</td>
+// //                   <td className="px-4 py-3">
+
+// //                     <button
+// //                         onClick={() => navigate(`/limits/create?userId=${encodeURIComponent(r.userId)}`)}
+// //                         className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+// //                                 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+// //                     >
+// //                         Create Limit
+// //                     </button>
+// //                   </td>
+
+// //                   <td className="px-4 py-3">
+
+// //                     <button
+// //                         onClick={() => navigate(`/limits/${encodeURIComponent(r.userId)}`)}
+// //                         className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+// //                                 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+// //                     >
+// //                         Show Limit
+// //                     </button>
+// //                   </td>
+// //                 </tr>
+// //               ))}
+// //           </tbody>
+// //         </table>
+// //       </div>
+
+// //       {/* Pager */}
+// //       {/* <div className="flex items-center justify-end gap-3 mt-3">
+// //         <button
+// //           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //           disabled={page <= 1}
+// //           onClick={() => setPage((p) => Math.max(1, p - 1))}
+// //         >
+// //           Previous
+// //         </button>
+// //         <span className="text-sm text-gray-600">
+// //           Page {page} / {totalPages} &nbsp;•&nbsp; Showing {rows.length} of {total}
+// //         </span>
+// //         <button
+// //           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //           disabled={page >= totalPages}
+// //           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+// //         >
+// //           Next
+// //         </button>
+// //       </div> */}
+
+
+// //         <div className="flex items-center justify-end gap-3 mt-3">
+// //             <button
+// //                 className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //                 disabled={!canPrev}
+// //                 onClick={() => setPage((p) => Math.max(1, p - 1))}
+// //             >
+// //                 Previous
+// //             </button>
+
+// //             <span className="text-sm text-gray-600">
+// //                 Page {page}{totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of {Number.isFinite(total) ? total : rows.length}
+// //             </span>
+
+// //             <button
+// //                 className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //                 disabled={!canNext}
+// //                 onClick={() => setPage((p) => p + 1)}
+// //             >
+// //                 Next
+// //             </button>
+// //         </div>
+// //     </div>
+// //   );
+// // }
+
 // // src/components/users/UsersTable.jsx
-// import { useEffect, useState } from "react";
-// import http from "../../services/http";
+// import { useEffect, useMemo, useState } from "react";
+// import { api } from "../../services/http";
 // import { useNavigate } from "react-router-dom";
-// const PAGE_SIZE = 2;
+
+// const PAGE_SIZE = 2; // you can change this
 
 // // simple concurrency limiter
 // async function mapLimit(items, limit, fn) {
@@ -34,33 +255,39 @@
 //   const [total, setTotal] = useState(0);
 //   const [totalPages, setTotalPages] = useState(1);
 //   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();  
+//   const navigate = useNavigate();
+
 //   useEffect(() => {
 //     let mounted = true;
 //     setLoading(true);
 
-//     http
+//     api
 //       .get("/api/Users", { params: { role: "User", page, pageSize: PAGE_SIZE } })
 //       .then(async (res) => {
 //         if (!mounted) return;
+
 //         const payload = res?.data;
 //         const users = Array.isArray(payload?.data) ? payload.data : [];
-//         setTotal(payload?.total ?? users.length);
-//         // setTotalPages(payload?.totalPages ?? 1);
-
-//         setTotalPages(
-//             Number.isFinite(payload?.totalPages)
-//                 ? payload.totalPages
-//                 : Number.isFinite(payload?.total)
-//                 ? Math.max(1, Math.ceil(payload.total / PAGE_SIZE))
-//                 : 1
+//         setTotal(
+//           Number.isFinite(payload?.total) ? payload.total : users.length
 //         );
+
+//         // Prefer payload.totalPages if provided; else compute from total
+//         const computedTotalPages = Number.isFinite(payload?.totalPages)
+//           ? payload.totalPages
+//           : Number.isFinite(payload?.total)
+//           ? Math.max(1, Math.ceil(payload.total / PAGE_SIZE))
+//           : Math.max(1, Math.ceil(users.length / PAGE_SIZE));
+
+//         setTotalPages(computedTotalPages);
 
 //         const merged = await mapLimit(users, 6, async (u) => {
 //           const userId = u.userId ?? u.UserID ?? u.userID;
 //           try {
-//             const w = await http.get("/api/Wallets", { params: { userId } });
-//             const wd = Array.isArray(w?.data?.data) ? w.data.data[0] : (w?.data?.data ?? w?.data);
+//             const w = await api.get("/api/Wallets", { params: { userId } });
+//             const wd = Array.isArray(w?.data?.data)
+//               ? w.data.data[0]
+//               : w?.data?.data ?? w?.data;
 //             return {
 //               userId,
 //               name: u.name,
@@ -77,6 +304,8 @@
 //       .catch((e) => {
 //         console.error(e);
 //         setRows([]);
+//         setTotal(0);
+//         setTotalPages(1);
 //       })
 //       .finally(() => mounted && setLoading(false));
 
@@ -85,145 +314,268 @@
 //     };
 //   }, [page]);
 
-//   const currency = (n) =>
-//     new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(n || 0);
-
-//   return (
-//     <div>
-//       <div className="mb-3">
-//         <h2 className="text-lg font-semibold">User Management</h2>
-//         <p className="text-sm text-gray-500">View and manage all registered users</p>
-//       </div>
-
-//       <div className="overflow-auto border rounded-xl">
-//         <table className="min-w-full text-sm">
-//           <thead className="bg-gray-50">
-//             <tr className="text-left">
-//               <th className="px-4 py-3">User ID</th>
-//               <th className="px-4 py-3">Name</th>
-//               <th className="px-4 py-3">Status</th>
-//               <th className="px-4 py-3">Balance</th>
-//               <th className="px-4 py-3">Create Limit</th>
-//               <th className="px-4 py-3">Show Limit</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {loading && (
-//               <tr>
-//                 <td colSpan={6} className="px-4 py-6 text-gray-500">
-//                   Loading users…
-//                 </td>
-//               </tr>
-//             )}
-//             {!loading && rows.length === 0 && (
-//               <tr>
-//                 <td colSpan={6} className="px-4 py-6 text-gray-500">
-//                   No users found.
-//                 </td>
-//               </tr>
-//             )}
-//             {!loading &&
-//               rows.map((r) => (
-//                 <tr key={r.userId} className="border-t">
-//                   <td className="px-4 py-3">{r.userId}</td>
-//                   <td className="px-4 py-3">
-//                     <div className="flex flex-col">
-//                       <span className="font-medium">{r.name}</span>
-                      
-//                     </div>
-//                   </td>
-//                   <td className="px-4 py-3">
-//                     <span
-//                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
-//                         (r.status || "").toLowerCase() === "active"
-//                           ? "bg-green-100 text-green-700"
-//                           : "bg-gray-100 text-gray-700"
-//                       }`}
-//                     >
-//                       {r.status}
-//                     </span>
-//                   </td>
-//                   <td className="px-4 py-3">{currency(r.balance)}</td>
-//                   <td className="px-4 py-3">
-
-//                     <button
-//                         onClick={() => navigate(`/limits/create?userId=${encodeURIComponent(r.userId)}`)}
-//                         className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
-//                                 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-//                     >
-//                         Create Limit
-//                     </button>
-//                   </td>
-
-//                   <td className="px-4 py-3">
-
-//                     <button
-//                         onClick={() => navigate(`/limits/${encodeURIComponent(r.userId)}`)}
-//                         className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
-//                                 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-//                     >
-//                         Show Limit
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* Pager */}
-//       {/* <div className="flex items-center justify-end gap-3 mt-3">
-//         <button
-//           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//           disabled={page <= 1}
-//           onClick={() => setPage((p) => Math.max(1, p - 1))}
-//         >
-//           Previous
-//         </button>
-//         <span className="text-sm text-gray-600">
-//           Page {page} / {totalPages} &nbsp;•&nbsp; Showing {rows.length} of {total}
-//         </span>
-//         <button
-//           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//           disabled={page >= totalPages}
-//           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-//         >
-//           Next
-//         </button>
-//       </div> */}
-
-
-//         <div className="flex items-center justify-end gap-3 mt-3">
-//             <button
-//                 className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//                 disabled={!canPrev}
-//                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-//             >
-//                 Previous
-//             </button>
-
-//             <span className="text-sm text-gray-600">
-//                 Page {page}{totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of {Number.isFinite(total) ? total : rows.length}
-//             </span>
-
-//             <button
-//                 className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//                 disabled={!canNext}
-//                 onClick={() => setPage((p) => p + 1)}
-//             >
-//                 Next
-//             </button>
-//         </div>
-//     </div>
+//   // ---- Pagination helpers ----
+//   const pageSafe = Math.max(1, Math.min(page, totalPages || 1));
+//   const canPrev = useMemo(() => !loading && pageSafe > 1, [loading, pageSafe]);
+//   const canNext = useMemo(
+//     () => !loading && pageSafe < (totalPages || 1),
+//     [loading, pageSafe, totalPages]
 //   );
+
+//   const gotoPrev = () => {
+//     if (canPrev) setPage((p) => Math.max(1, p - 1));
+//   };
+//   const gotoNext = () => {
+//     if (canNext) setPage((p) => Math.min((totalPages || 1), p + 1));
+//   };
+
+//   const currency = (n) =>
+//     new Intl.NumberFormat("en-IN", {
+//       style: "currency",
+//       currency: "INR",
+//       maximumFractionDigits: 2,
+//     }).format(n || 0);
+
+// //   return (
+// //     <div>
+// //       <div className="mb-3">
+// //         <h2 className="text-lg font-semibold">User Management</h2>
+// //         <p className="text-sm text-gray-500">View and manage all registered users</p>
+// //       </div>
+
+// //       <div className="overflow-auto border rounded-xl">
+// //         <table className="min-w-full text-sm">
+// //           <thead className="bg-gray-50">
+// //             <tr className="text-left">
+// //               <th className="px-4 py-3">User ID</th>
+// //               <th className="px-4 py-3">Name</th>
+// //               <th className="px-4 py-3">Status</th>
+// //               <th className="px-4 py-3">Balance</th>
+// //               <th className="px-4 py-3">Create Limit</th>
+// //               <th className="px-4 py-3">Show Limit</th>
+// //             </tr>
+// //           </thead>
+// //           <tbody>
+// //             {loading && (
+// //               <tr>
+// //                 <td colSpan={6} className="px-4 py-6 text-gray-500">
+// //                   Loading users…
+// //                 </td>
+// //               </tr>
+// //             )}
+// //             {!loading && rows.length === 0 && (
+// //               <tr>
+// //                 <td colSpan={6} className="px-4 py-6 text-gray-500">
+// //                   No users found.
+// //                 </td>
+// //               </tr>
+// //             )}
+// //             {!loading &&
+// //               rows.map((r) => (
+// //                 <tr key={r.userId} className="border-t">
+// //                   <td className="px-4 py-3">{r.userId}</td>
+// //                   <td className="px-4 py-3">
+// //                     <div className="flex flex-col">
+// //                       <span className="font-medium">{r.name}</span>
+// //                     </div>
+// //                   </td>
+// //                   <td className="px-4 py-3">
+// //                     <span
+// //                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+// //                         (r.status || "").toLowerCase() === "active"
+// //                           ? "bg-green-100 text-green-700"
+// //                           : "bg-gray-100 text-gray-700"
+// //                       }`}
+// //                     >
+// //                       {r.status}
+// //                     </span>
+// //                   </td>
+// //                   <td className="px-4 py-3">{currency(r.balance)}</td>
+// //                   <td className="px-4 py-3">
+// //                     <button
+// //                       onClick={() =>
+// //                         navigate(`/dashboard/admin/limits/create?userId=${encodeURIComponent(r.userId)}`)
+// //                       }
+// //                       className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+// //                                  focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+// //                     >
+// //                       Create Limit
+// //                     </button>
+// //                   </td>
+// //                   <td className="px-4 py-3">
+// //                     <button
+// //                       onClick={() => navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)}
+// //                       className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
+// //                                  focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+// //                     >
+// //                       Show Limit
+// //                     </button>
+// //                   </td>
+// //                 </tr>
+// //               ))}
+// //           </tbody>
+// //         </table>
+// //       </div>
+
+// //       {/* Pager */}
+// //       <div className="flex items-center justify-end gap-3 mt-3">
+// //         <button
+// //           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //           disabled={!canPrev}
+// //           onClick={gotoPrev}
+// //         >
+// //           Previous
+// //         </button>
+
+// //         <span className="text-sm text-gray-600">
+// //           Page {pageSafe}
+// //           {totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of{" "}
+// //           {Number.isFinite(total) ? total : rows.length}
+// //         </span>
+
+// //         <button
+// //           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
+// //           disabled={!canNext}
+// //           onClick={gotoNext}
+// //         >
+// //           Next
+// //         </button>
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+// return (
+//   <div>
+//     <div className="mb-3">
+//       <h2 className="text-lg font-semibold">User Management</h2>
+//       <p className="text-sm text-slate-500">View and manage all registered users</p>
+//     </div>
+
+//     <div className="overflow-auto border border-cyan-100 rounded-xl">
+//       <table className="min-w-full text-sm">
+//         <thead className="bg-cyan-50">
+//           <tr className="text-left">
+//             <th className="px-4 py-3">User ID</th>
+//             <th className="px-4 py-3">Name</th>
+//             <th className="px-4 py-3">Status</th>
+//             <th className="px-4 py-3">Balance</th>
+//             <th className="px-4 py-3">Create Limit</th>
+//             <th className="px-4 py-3">Show Limit</th>
+//             <th className="px-4 py-3">Update Limit</th>
+
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {loading && (
+//             <tr>
+//               <td colSpan={6} className="px-4 py-6 text-slate-500">
+//                 Loading users…
+//               </td>
+//             </tr>
+//           )}
+//           {!loading && rows.length === 0 && (
+//             <tr>
+//               <td colSpan={6} className="px-4 py-6 text-slate-500">
+//                 No users found.
+//               </td>
+//             </tr>
+//           )}
+//           {!loading &&
+//             rows.map((r) => (
+//               <tr key={r.userId} className="border-t hover:bg-cyan-50/50">
+//                 <td className="px-4 py-3">{r.userId}</td>
+//                 <td className="px-4 py-3">
+//                   <div className="flex flex-col">
+//                     <span className="font-medium">{r.name}</span>
+//                   </div>
+//                 </td>
+//                 <td className="px-4 py-3">
+//                   <span
+//                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+//                       (r.status || "").toLowerCase() === "active"
+//                         ? "bg-green-100 text-green-700"
+//                         : "bg-slate-100 text-slate-700"
+//                     }`}
+//                   >
+//                     {r.status}
+//                   </span>
+//                 </td>
+//                 <td className="px-4 py-3">{currency(r.balance)}</td>
+//                 <td className="px-4 py-3">
+//                   <button
+//                     onClick={() =>
+//                       navigate(`/dashboard/admin/limits/create?userId=${encodeURIComponent(r.userId)}`)
+//                     }
+//                     className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm
+//                                focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+//                   >
+//                     Create Limit
+//                   </button>
+//                 </td>
+//                 <td className="px-4 py-3">
+//                   <button
+//                     onClick={() => navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)}
+//                     className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm
+//                                focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+//                   >
+//                     Show Limit
+//                   </button>
+//                 </td>
+
+//                 <td className="px-4 py-3">
+//                   {r.limitId ? (
+//                     <button
+//                       onClick={() => navigate(`/dashboard/admin/limits/update/${r.limitId}`)}
+//                       className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
+//                     >
+//                       Update Limit
+//                     </button>
+//                   ) : (
+//                     <span className="text-slate-400 italic text-xs">No limit set</span>
+//                   )}
+//                 </td>
+
+//               </tr>
+//             ))}
+//         </tbody>
+//       </table>
+//     </div>
+
+//     {/* Pager */}
+//     <div className="flex items-center justify-end gap-3 mt-3">
+//       <button
+//         className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//         disabled={!canPrev}
+//         onClick={gotoPrev}
+//       >
+//         Previous
+//       </button>
+
+//       <span className="text-sm text-slate-600">
+//         Page {pageSafe}
+//         {totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of{" "}
+//         {Number.isFinite(total) ? total : rows.length}
+//       </span>
+
+//       <button
+//         className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//         disabled={!canNext}
+//         onClick={gotoNext}
+//       >
+//         Next
+//       </button>
+//     </div>
+//   </div>
+// );
 // }
 
-// src/components/users/UsersTable.jsx
+
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../../services/http";
 import { useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 2; // you can change this
+const PAGE_SIZE = 2;
 
 // simple concurrency limiter
 async function mapLimit(items, limit, fn) {
@@ -261,18 +613,20 @@ export default function UsersTable() {
     let mounted = true;
     setLoading(true);
 
-    api
-      .get("/api/Users", { params: { role: "User", page, pageSize: PAGE_SIZE } })
-      .then(async (res) => {
-        if (!mounted) return;
+    async function loadData() {
+      try {
+        // --- Load users ---
+        const res = await api.get("/api/Users", {
+          params: { role: "User", page, pageSize: PAGE_SIZE },
+        });
 
         const payload = res?.data;
         const users = Array.isArray(payload?.data) ? payload.data : [];
-        setTotal(
-          Number.isFinite(payload?.total) ? payload.total : users.length
-        );
 
-        // Prefer payload.totalPages if provided; else compute from total
+        if (!mounted) return;
+
+        setTotal(Number.isFinite(payload?.total) ? payload.total : users.length);
+
         const computedTotalPages = Number.isFinite(payload?.totalPages)
           ? payload.totalPages
           : Number.isFinite(payload?.total)
@@ -281,37 +635,58 @@ export default function UsersTable() {
 
         setTotalPages(computedTotalPages);
 
+        // --- Load ALL LIMITS ONCE ---
+        const limitsResponse = await api.get("/api/limits");
+        const allLimits = Array.isArray(limitsResponse?.data?.data)
+          ? limitsResponse.data.data
+          : [];
+
+        // --- Merge user with wallet + limitId ---
         const merged = await mapLimit(users, 6, async (u) => {
           const userId = u.userId ?? u.UserID ?? u.userID;
+
+          // find limit for this user
+          const foundLimit = allLimits.find((l) => l.userID === userId);
+
           try {
             const w = await api.get("/api/Wallets", { params: { userId } });
             const wd = Array.isArray(w?.data?.data)
               ? w.data.data[0]
               : w?.data?.data ?? w?.data;
+
             return {
               userId,
               name: u.name,
               status: wd?.status ?? "Active",
               balance: wd?.balance ?? 0,
+              limitId: foundLimit ? foundLimit.limitID : null,
             };
           } catch {
-            return { userId, name: u.name, status: "—", balance: 0 };
+            return {
+              userId,
+              name: u.name,
+              status: "—",
+              balance: 0,
+              limitId: foundLimit ? foundLimit.limitID : null,
+            };
           }
         });
 
-        setRows(merged);
-      })
-      .catch((e) => {
-        console.error(e);
-        setRows([]);
-        setTotal(0);
-        setTotalPages(1);
-      })
-      .finally(() => mounted && setLoading(false));
+        if (mounted) setRows(merged);
+      } catch (err) {
+        console.error(err);
+        if (mounted) {
+          setRows([]);
+          setTotal(0);
+          setTotalPages(1);
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
 
-    return () => {
-      mounted = false;
-    };
+    loadData();
+    return () => { mounted = false; };
   }, [page]);
 
   // ---- Pagination helpers ----
@@ -322,12 +697,8 @@ export default function UsersTable() {
     [loading, pageSafe, totalPages]
   );
 
-  const gotoPrev = () => {
-    if (canPrev) setPage((p) => Math.max(1, p - 1));
-  };
-  const gotoNext = () => {
-    if (canNext) setPage((p) => Math.min((totalPages || 1), p + 1));
-  };
+  const gotoPrev = () => canPrev && setPage((p) => Math.max(1, p - 1));
+  const gotoNext = () => canNext && setPage((p) => Math.min((totalPages || 1), p + 1));
 
   const currency = (n) =>
     new Intl.NumberFormat("en-IN", {
@@ -336,236 +707,141 @@ export default function UsersTable() {
       maximumFractionDigits: 2,
     }).format(n || 0);
 
-//   return (
-//     <div>
-//       <div className="mb-3">
-//         <h2 className="text-lg font-semibold">User Management</h2>
-//         <p className="text-sm text-gray-500">View and manage all registered users</p>
-//       </div>
+  // ============================================================
+  // ===================== UI BELOW ==============================
+  // ============================================================
 
-//       <div className="overflow-auto border rounded-xl">
-//         <table className="min-w-full text-sm">
-//           <thead className="bg-gray-50">
-//             <tr className="text-left">
-//               <th className="px-4 py-3">User ID</th>
-//               <th className="px-4 py-3">Name</th>
-//               <th className="px-4 py-3">Status</th>
-//               <th className="px-4 py-3">Balance</th>
-//               <th className="px-4 py-3">Create Limit</th>
-//               <th className="px-4 py-3">Show Limit</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {loading && (
-//               <tr>
-//                 <td colSpan={6} className="px-4 py-6 text-gray-500">
-//                   Loading users…
-//                 </td>
-//               </tr>
-//             )}
-//             {!loading && rows.length === 0 && (
-//               <tr>
-//                 <td colSpan={6} className="px-4 py-6 text-gray-500">
-//                   No users found.
-//                 </td>
-//               </tr>
-//             )}
-//             {!loading &&
-//               rows.map((r) => (
-//                 <tr key={r.userId} className="border-t">
-//                   <td className="px-4 py-3">{r.userId}</td>
-//                   <td className="px-4 py-3">
-//                     <div className="flex flex-col">
-//                       <span className="font-medium">{r.name}</span>
-//                     </div>
-//                   </td>
-//                   <td className="px-4 py-3">
-//                     <span
-//                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
-//                         (r.status || "").toLowerCase() === "active"
-//                           ? "bg-green-100 text-green-700"
-//                           : "bg-gray-100 text-gray-700"
-//                       }`}
-//                     >
-//                       {r.status}
-//                     </span>
-//                   </td>
-//                   <td className="px-4 py-3">{currency(r.balance)}</td>
-//                   <td className="px-4 py-3">
-//                     <button
-//                       onClick={() =>
-//                         navigate(`/dashboard/admin/limits/create?userId=${encodeURIComponent(r.userId)}`)
-//                       }
-//                       className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
-//                                  focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-//                     >
-//                       Create Limit
-//                     </button>
-//                   </td>
-//                   <td className="px-4 py-3">
-//                     <button
-//                       onClick={() => navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)}
-//                       className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 shadow-sm
-//                                  focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
-//                     >
-//                       Show Limit
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//           </tbody>
-//         </table>
-//       </div>
+  return (
+    <div>
+      <div className="mb-3">
+        <h2 className="text-lg font-semibold">User Management</h2>
+        <p className="text-sm text-slate-500">View and manage all registered users</p>
+      </div>
 
-//       {/* Pager */}
-//       <div className="flex items-center justify-end gap-3 mt-3">
-//         <button
-//           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//           disabled={!canPrev}
-//           onClick={gotoPrev}
-//         >
-//           Previous
-//         </button>
-
-//         <span className="text-sm text-gray-600">
-//           Page {pageSafe}
-//           {totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of{" "}
-//           {Number.isFinite(total) ? total : rows.length}
-//         </span>
-
-//         <button
-//           className="px-3 py-1.5 border rounded-md disabled:opacity-50"
-//           disabled={!canNext}
-//           onClick={gotoNext}
-//         >
-//           Next
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-return (
-  <div>
-    <div className="mb-3">
-      <h2 className="text-lg font-semibold">User Management</h2>
-      <p className="text-sm text-slate-500">View and manage all registered users</p>
-    </div>
-
-    <div className="overflow-auto border border-cyan-100 rounded-xl">
-      <table className="min-w-full text-sm">
-        <thead className="bg-cyan-50">
-          <tr className="text-left">
-            <th className="px-4 py-3">User ID</th>
-            <th className="px-4 py-3">Name</th>
-            <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3">Balance</th>
-            <th className="px-4 py-3">Create Limit</th>
-            <th className="px-4 py-3">Show Limit</th>
-            <th className="px-4 py-3">Update Limit</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          {loading && (
-            <tr>
-              <td colSpan={6} className="px-4 py-6 text-slate-500">
-                Loading users…
-              </td>
+      <div className="overflow-auto border border-cyan-100 rounded-xl">
+        <table className="min-w-full text-sm">
+          <thead className="bg-cyan-50">
+            <tr className="text-left">
+              <th className="px-4 py-3">User ID</th>
+              <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Balance</th>
+              <th className="px-4 py-3">Create Limit</th>
+              <th className="px-4 py-3">Show Limit</th>
+              <th className="px-4 py-3">Update Limit</th>
             </tr>
-          )}
-          {!loading && rows.length === 0 && (
-            <tr>
-              <td colSpan={6} className="px-4 py-6 text-slate-500">
-                No users found.
-              </td>
-            </tr>
-          )}
-          {!loading &&
-            rows.map((r) => (
-              <tr key={r.userId} className="border-t hover:bg-cyan-50/50">
-                <td className="px-4 py-3">{r.userId}</td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{r.name}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
-                      (r.status || "").toLowerCase() === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-slate-100 text-slate-700"
-                    }`}
-                  >
-                    {r.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3">{currency(r.balance)}</td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() =>
-                      navigate(`/dashboard/admin/limits/create?userId=${encodeURIComponent(r.userId)}`)
-                    }
-                    className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm
-                               focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
-                  >
-                    Create Limit
-                  </button>
-                </td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)}
-                    className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm
-                               focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
-                  >
-                    Show Limit
-                  </button>
-                </td>
+          </thead>
 
-                <td className="px-4 py-3">
-                  {r.limitId ? (
-                    <button
-                      onClick={() => navigate(`/dashboard/admin/limits/update/${r.limitId}`)}
-                      className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
-                    >
-                      Update Limit
-                    </button>
-                  ) : (
-                    <span className="text-slate-400 italic text-xs">No limit set</span>
-                  )}
+          <tbody>
+            {loading && (
+              <tr>
+                <td colSpan={7} className="px-4 py-6 text-slate-500">
+                  Loading users…
                 </td>
-
               </tr>
-            ))}
-        </tbody>
-      </table>
+            )}
+
+            {!loading && rows.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-6 text-slate-500">
+                  No users found.
+                </td>
+              </tr>
+            )}
+
+            {!loading &&
+              rows.map((r) => (
+                <tr key={r.userId} className="border-t hover:bg-cyan-50/50">
+                  <td className="px-4 py-3">{r.userId}</td>
+                  <td className="px-4 py-3">
+                    <span className="font-medium">{r.name}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+                        (r.status || "").toLowerCase() === "active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-slate-100 text-slate-700"
+                      }`}
+                    >
+                      {r.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">{currency(r.balance)}</td>
+
+                  {/* Create Limit */}
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/admin/limits/create?userId=${encodeURIComponent(
+                            r.userId
+                          )}`
+                        )
+                      }
+                      className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
+                    >
+                      Create Limit
+                    </button>
+                  </td>
+
+                  {/* Show Limit */}
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() =>
+                        navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)
+                      }
+                      className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
+                    >
+                      Show Limit
+                    </button>
+                  </td>
+
+                  {/* Update Limit */}
+                  <td className="px-4 py-3">
+                    {r.limitId ? (
+                      <button
+                        onClick={() =>
+                          navigate(`/dashboard/admin/limits/update/${r.limitId}`)
+                        }
+                        className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
+                      >
+                        Update Limit
+                      </button>
+                    ) : (
+                      <span className="text-slate-400 italic text-xs">No limit set</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pager */}
+      <div className="flex items-center justify-end gap-3 mt-3">
+        <button
+          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          disabled={!canPrev}
+          onClick={gotoPrev}
+        >
+          Previous
+        </button>
+
+        <span className="text-sm text-slate-600">
+          Page {pageSafe}
+          {totalPages ? ` / ${totalPages}` : ""} • Showing {rows.length} of{" "}
+          {Number.isFinite(total) ? total : rows.length}
+        </span>
+
+        <button
+          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          disabled={!canNext}
+          onClick={gotoNext}
+        >
+          Next
+        </button>
+      </div>
     </div>
-
-    {/* Pager */}
-    <div className="flex items-center justify-end gap-3 mt-3">
-      <button
-        className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
-        disabled={!canPrev}
-        onClick={gotoPrev}
-      >
-        Previous
-      </button>
-
-      <span className="text-sm text-slate-600">
-        Page {pageSafe}
-        {totalPages ? ` / ${totalPages}` : ""} &nbsp;•&nbsp; Showing {rows.length} of{" "}
-        {Number.isFinite(total) ? total : rows.length}
-      </span>
-
-      <button
-        className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
-        disabled={!canNext}
-        onClick={gotoNext}
-      >
-        Next
-      </button>
-    </div>
-  </div>
-);
+  );
 }

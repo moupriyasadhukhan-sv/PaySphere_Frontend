@@ -16,8 +16,21 @@ export function loginUser(payload) {
 
 // Logout (deletes refresh cookie)
 export function logoutUser() {
-  return authClient.post("/api/Auth/logout");
+  return authClient.post("/auth/logout");
 }
+
+
+export async function refreshAccessToken() {
+  try {
+    const res = await authClient.post("/auth/refresh");
+    return res.data.accessToken;
+  } catch {
+    return null;
+  }
+}
+
+
+
 // import { http, authClient } from "../http";
 
 // export const registerUser = (data) => http.post("/api/Auth/register", data);

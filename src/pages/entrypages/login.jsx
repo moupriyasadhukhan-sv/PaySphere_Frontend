@@ -1593,151 +1593,314 @@ export default function Login() {
     }
   };
 
+//   return (
+//     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+//       <div className="w-full max-w-md">
+//         <div className="bg-white rounded-xl shadow border p-6 sm:p-8">
+//           <div className="flex flex-col items-center">
+//             <h1 className="text-2xl font-semibold text-slate-900">Welcome Back</h1>
+//             <p className="text-sm text-slate-500 mt-1">
+//               Sign in to your PaySphere account
+//             </p>
+//           </div>
+
+//           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+
+//             {/* Email */}
+//             <div>
+//               <label className="block text-sm font-medium text-slate-700 mb-1">
+//                 Email
+//               </label>
+//               <input
+//                 type="email"
+//                 name="email"
+//                 placeholder="you@example.com"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.email ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.email}
+//                 onChange={handleChange}
+//               />
+//               {errors.email && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+//               )}
+//             </div>
+
+//             {/* Password */}
+//             <div>
+//               <div className="flex items-center justify-between">
+//                 <label className="block text-sm font-medium">Password</label>
+//                 <button
+//                   type="button"
+//                   onClick={openForgot}
+//                   className="text-sm text-indigo-600"
+//                 >
+//                   Forgot password?
+//                 </button>
+//               </div>
+
+//               <input
+//                 type="password"
+//                 name="password"
+//                 placeholder="••••••••"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.password ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.password}
+//                 onChange={handleChange}
+//               />
+
+//               {errors.password && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+//               )}
+//             </div>
+
+//             {/* Role */}
+//             <div>
+//               <label className="block text-sm font-medium">Login As</label>
+//               <select
+//                 name="role"
+//                 className={`w-full p-2.5 rounded-lg border ${
+//                   errors.role ? "border-red-500" : "border-slate-300"
+//                 }`}
+//                 value={data.role}
+//                 onChange={handleChange}
+//               >
+//                 <option value="">Select Role</option>
+//                 <option value="User">User</option>
+//                 <option value="Merchant">Merchant</option>
+//                 <option value="Admin">Admin</option>
+//                 <option value="Risk">Risk</option>
+//                 <option value="Ops">Ops</option>
+//               </select>
+
+//               {errors.role && (
+//                 <p className="text-red-600 text-sm mt-1">{errors.role}</p>
+//               )}
+//             </div>
+
+//             {/* Submit */}
+//             <button
+//               type="submit"
+//               disabled={submitting}
+//               className="w-full rounded-lg bg-indigo-600 text-white py-2.5"
+//             >
+//               {submitting ? "Signing in..." : "Sign In"}
+//             </button>
+//           </form>
+//         </div>
+//       </div>
+
+//       {/* Forgot Password Modal */}
+//       <Modal
+//         open={forgotOpen}
+//         title="Reset your password"
+//         onClose={closeForgot}
+//         footer={
+//           <>
+//             <button
+//               type="button"
+//               onClick={closeForgot}
+//               className="px-3 py-1.5 border rounded-md"
+//               disabled={sending}
+//             >
+//               Close
+//             </button>
+//             <button
+//               type="button"
+//               onClick={sendResetLink}
+//               className={`px-3 py-1.5 rounded-md text-white ${
+//                 sending ? "bg-gray-400" : "bg-indigo-600"
+//               }`}
+//               disabled={sending}
+//             >
+//               {sending ? "Sending…" : "Send reset link"}
+//             </button>
+//           </>
+//         }
+//       >
+//         <p className="text-sm text-slate-600">
+//           Enter your account email and we will send you a password reset link.
+//         </p>
+
+//         <input
+//           type="email"
+//           placeholder="you@example.com"
+//           className={`w-full p-2.5 rounded-lg border ${
+//             sendErr ? "border-red-500" : "border-slate-300"
+//           }`}
+//           value={forgotEmail}
+//           onChange={(e) => setForgotEmail(e.target.value)}
+//         />
+
+//         {sendErr && <p className="text-red-600 text-sm mt-1">{sendErr}</p>}
+//         {sentMsg && (
+//           <p className="text-green-600 text-sm mt-2">{sentMsg}</p>
+//         )}
+//       </Modal>
+//     </div>
+//   );
+
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-xl shadow border p-6 sm:p-8">
-          <div className="flex flex-col items-center">
-            <h1 className="text-2xl font-semibold text-slate-900">Welcome Back</h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Sign in to your PaySphere account
-            </p>
-          </div>
+  <div className="min-h-screen w-full 
+      bg-gradient-to-br from-[#071a3d] via-[#063025] to-[#020a33]
+      flex items-center justify-center px-4">
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <div className="w-full max-w-sm text-white">
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="you@example.com"
-                className={`w-full p-2.5 rounded-lg border ${
-                  errors.email ? "border-red-500" : "border-slate-300"
-                }`}
-                value={data.email}
-                onChange={handleChange}
-              />
-              {errors.email && (
-                <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Password */}
-            <div>
-              <div className="flex items-center justify-between">
-                <label className="block text-sm font-medium">Password</label>
-                <button
-                  type="button"
-                  onClick={openForgot}
-                  className="text-sm text-indigo-600"
-                >
-                  Forgot password?
-                </button>
-              </div>
-
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                className={`w-full p-2.5 rounded-lg border ${
-                  errors.password ? "border-red-500" : "border-slate-300"
-                }`}
-                value={data.password}
-                onChange={handleChange}
-              />
-
-              {errors.password && (
-                <p className="text-red-600 text-sm mt-1">{errors.password}</p>
-              )}
-            </div>
-
-            {/* Role */}
-            <div>
-              <label className="block text-sm font-medium">Login As</label>
-              <select
-                name="role"
-                className={`w-full p-2.5 rounded-lg border ${
-                  errors.role ? "border-red-500" : "border-slate-300"
-                }`}
-                value={data.role}
-                onChange={handleChange}
-              >
-                <option value="">Select Role</option>
-                <option value="User">User</option>
-                <option value="Merchant">Merchant</option>
-                <option value="Admin">Admin</option>
-                <option value="Risk">Risk</option>
-                <option value="Ops">Ops</option>
-              </select>
-
-              {errors.role && (
-                <p className="text-red-600 text-sm mt-1">{errors.role}</p>
-              )}
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-indigo-600 text-white py-2.5"
-            >
-              {submitting ? "Signing in..." : "Sign In"}
-            </button>
-          </form>
-        </div>
+      {/* TITLE */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-bold tracking-wide">Login</h1>
+        <p className="text-sm text-gray-300 mt-2">Sign in to continue.</p>
       </div>
 
-      {/* Forgot Password Modal */}
-      <Modal
-        open={forgotOpen}
-        title="Reset your password"
-        onClose={closeForgot}
-        footer={
-          <>
+      {/* LOGIN FORM */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* EMAIL */}
+        <div>
+          <label className="text-xs font-medium tracking-wide text-gray-300">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            className={`
+              w-full mt-2 p-3 rounded-xl bg-gray-200/30 text-white 
+              placeholder-gray-300 outline-none transition
+              focus:bg-gray-200/40
+              ${errors.email ? "border border-red-400" : "border-none"}
+            `}
+            value={data.email}
+            onChange={handleChange}
+          />
+          {errors.email && (
+            <p className="text-red-400 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
+
+        {/* PASSWORD */}
+        <div>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-medium tracking-wide text-gray-300">
+              Password
+            </label>
+
             <button
               type="button"
-              onClick={closeForgot}
-              className="px-3 py-1.5 border rounded-md"
-              disabled={sending}
+              onClick={openForgot}
+              className="text-xs text-purple-300 hover:text-white transition"
             >
-              Close
+              Forgot password?
             </button>
-            <button
-              type="button"
-              onClick={sendResetLink}
-              className={`px-3 py-1.5 rounded-md text-white ${
-                sending ? "bg-gray-400" : "bg-indigo-600"
-              }`}
-              disabled={sending}
-            >
-              {sending ? "Sending…" : "Send reset link"}
-            </button>
-          </>
-        }
-      >
-        <p className="text-sm text-slate-600">
-          Enter your account email and we will send you a password reset link.
-        </p>
+          </div>
 
-        <input
-          type="email"
-          placeholder="you@example.com"
-          className={`w-full p-2.5 rounded-lg border ${
-            sendErr ? "border-red-500" : "border-slate-300"
-          }`}
-          value={forgotEmail}
-          onChange={(e) => setForgotEmail(e.target.value)}
-        />
+          <input
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            className={`
+              w-full mt-2 p-3 rounded-xl bg-gray-200/30 text-white 
+              placeholder-gray-300 outline-none transition
+              focus:bg-gray-200/40
+              ${errors.password ? "border border-red-400" : "border-none"}
+            `}
+            value={data.password}
+            onChange={handleChange}
+          />
+          {errors.password && (
+            <p className="text-red-400 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
 
-        {sendErr && <p className="text-red-600 text-sm mt-1">{sendErr}</p>}
-        {sentMsg && (
-          <p className="text-green-600 text-sm mt-2">{sentMsg}</p>
-        )}
-      </Modal>
+        {/* ROLE */}
+        <div>
+          <label className="text-xs font-medium tracking-wide text-gray-300">
+            Login As
+          </label>
+
+          <select
+            name="role"
+            className={`
+              w-full mt-2 p-3 rounded-xl bg-gray-200/30 text-white outline-none 
+              focus:bg-gray-200/40
+              ${errors.role ? "border border-red-400" : "border-none"}
+            `}
+            value={data.role}
+            onChange={handleChange}
+          >
+            <option value="" className="text-black">Select Role</option>
+            <option value="User" className="text-black">User</option>
+            <option value="Merchant" className="text-black">Merchant</option>
+            <option value="Admin" className="text-black">Admin</option>
+            <option value="Risk" className="text-black">Risk</option>
+            <option value="Ops" className="text-black">Ops</option>
+          </select>
+
+          {errors.role && (
+            <p className="text-red-400 text-xs mt-1">{errors.role}</p>
+          )}
+        </div>
+
+        {/* SIGN IN BUTTON */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="
+            w-full py-3 rounded-xl 
+            bg-gradient-to-r from-purple-500 to-blue-600
+            hover:scale-[1.02] transition duration-200 
+            text-white font-semibold shadow-lg disabled:opacity-50
+          "
+        >
+          {submitting ? "Signing in..." : "Sign In"}
+        </button>
+      </form>
     </div>
-  );
+
+    {/* Forgot Password Modal (same logic, new style) */}
+    <Modal
+      open={forgotOpen}
+      title="Reset your password"
+      onClose={closeForgot}
+      footer={
+        <>
+          <button
+            onClick={closeForgot}
+            className="px-3 py-1.5 border border-white/30 rounded-md text-white bg-white/10 backdrop-blur-md"
+            disabled={sending}
+          >
+            Close
+          </button>
+          <button
+            onClick={sendResetLink}
+            className={`px-3 py-1.5 rounded-md text-white 
+            ${sending ? "bg-gray-400" : "bg-indigo-600"}`}
+            disabled={sending}
+          >
+            {sending ? "Sending…" : "Send reset link"}
+          </button>
+        </>
+      }
+    >
+      <p className="text-sm text-gray-200 mb-3">
+        Enter your account email and we will send a reset link.
+      </p>
+
+      <input
+        type="email"
+        className={`w-full p-2.5 rounded-lg bg-white/10 text-white 
+          backdrop-blur-lg outline-none ${
+          sendErr ? "border border-red-400" : "border border-white/20"
+        }`}
+        value={forgotEmail}
+        onChange={(e) => setForgotEmail(e.target.value)}
+      />
+
+      {sendErr && <p className="text-red-400 text-sm mt-1">{sendErr}</p>}
+      {sentMsg && <p className="text-green-400 text-sm mt-1">{sentMsg}</p>}
+    </Modal>
+  </div>
+);
 }
