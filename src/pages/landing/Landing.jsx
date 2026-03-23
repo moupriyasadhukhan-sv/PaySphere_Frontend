@@ -1,4 +1,3 @@
-import { Link, useNavigate } from "react-router-dom";
 
 // export default function Landing() {
 //   const navigate = useNavigate();
@@ -78,6 +77,9 @@ import { Link, useNavigate } from "react-router-dom";
 //   );
 // }
 
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -124,7 +126,22 @@ export default function Landing() {
           <div className="flex space-x-4">
             {/* LOGIN BUTTON with REAL Hover effect */}
             <button
-              onClick={() => navigate("/login")}
+              // onClick={() => navigate("/login")}
+              onClick={() => {
+                const loggedIn = localStorage.getItem("loggedIn");
+                const role = (localStorage.getItem("role") || "").toLowerCase();
+
+                if (loggedIn === "true" && role) {
+                  // Already logged in → go to dashboard
+                  if (role === "admin") navigate("/dashboard/admin");
+                  else if (role === "user") navigate("/dashboard/user");
+                  else if (role === "merchant") navigate("/dashboard/merchant");
+                  else if (role === "ops") navigate("/dashboard/ops");
+                  else if (role === "risk") navigate("/dashboard/risk");
+                } else {
+                  navigate("/login"); // Not logged in
+                }
+              }}
               className="
                 px-4 py-2 rounded-lg 
                 bg-white/15 
@@ -139,7 +156,22 @@ export default function Landing() {
 
             {/* GET STARTED BUTTON (matching theme) */}
             <button
-              onClick={() => navigate("/register")}
+              // onClick={() => navigate("/register")}
+              onClick={() => {
+                const loggedIn = localStorage.getItem("loggedIn");
+                const role = (localStorage.getItem("role") || "").toLowerCase();
+
+                if (loggedIn === "true" && role) {
+                  // Already logged in → go to dashboard
+                  if (role === "admin") navigate("/dashboard/admin");
+                  else if (role === "user") navigate("/dashboard/user");
+                  else if (role === "merchant") navigate("/dashboard/merchant");
+                  else if (role === "ops") navigate("/dashboard/ops");
+                  else if (role === "risk") navigate("/dashboard/risk");
+                } else {
+                  navigate("/register"); // Not logged in → go register
+                }
+              }}
               className="
                 px-5 py-2 rounded-lg 
                 bg-gradient-to-r from-[#1fa2ff] via-[#12d8fa] to-[#06beb6]

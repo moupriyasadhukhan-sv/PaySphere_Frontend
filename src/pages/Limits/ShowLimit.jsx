@@ -27,45 +27,95 @@ export default function ShowLimit() {
     return () => { mounted = false; };
   }, [userId]);
 
-  return (
-    <div className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">User Limits</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              if (limit) navigate(`/dashboard/admin/limits/update/${limit.limitID}`);
-              else navigate(`/dashboard/admin/limits/create?userId=${userId}`);
-            }}
-            className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600"
-          >
-            {limit ? "Update Limit" : "Create Limit"}
-          </button>
+//   return (
+//     <div className="p-6">
+//       <div className="mb-4 flex items-center justify-between">
+//         <h2 className="text-xl font-semibold">User Limits</h2>
+//         <div className="flex gap-2">
+//           <button
+//             onClick={() => {
+//               if (limit) navigate(`/dashboard/admin/limits/update/${limit.limitID}`);
+//               else navigate(`/dashboard/admin/limits/create?userId=${userId}`);
+//             }}
+//             className="px-3 py-1.5 rounded-md text-white bg-emerald-500 hover:bg-emerald-600"
+//           >
+//             {limit ? "Update Limit" : "Create Limit"}
+//           </button>
 
-          <button
-            onClick={() => navigate(-1)}
-            className="px-3 py-1.5 rounded-md border hover:bg-slate-50"
-          >
-            Back
-          </button>
+//           <button
+//             onClick={() => navigate(-1)}
+//             className="px-3 py-1.5 rounded-md border hover:bg-slate-50"
+//           >
+//             Back
+//           </button>
+//         </div>
+//       </div>
+
+//       <div className="rounded-lg border bg-white p-4">
+//         {loading && <p className="text-slate-600">Loading…</p>}
+//         {!loading && error && <p className="text-red-500">{error}</p>}
+//         {!loading && !error && !limit && (
+//           <p className="text-slate-600">No limit found for user {userId}.</p>
+//         )}
+
+//         {!loading && limit && (
+//           <div className="space-y-2">
+//             <div><b>User ID:</b> {limit.userID}</div>
+//             <div><b>Daily Limit:</b> {limit.dailyLimit}</div>
+//             <div><b>Monthly Limit:</b> {limit.monthlyLimit}</div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+    return (
+  <div className="min-h-screen flex items-center justify-center p-6">
+
+    <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl 
+                    border border-white/20 rounded-2xl p-6 shadow-xl">
+
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-white">User Limits</h2>
+
+        <button
+          onClick={() => navigate(-1)}
+          className="px-3 py-1.5 rounded-md border border-white/30 text-white 
+                     hover:bg-white/10 transition"
+        >
+          Back
+        </button>
+      </div>
+
+      {loading && <p className="text-slate-300">Loading…</p>}
+      {!loading && error && <p className="text-red-400">{error}</p>}
+
+      {!loading && !error && !limit && (
+        <p className="text-slate-300">No limit found for user {userId}.</p>
+      )}
+
+      {!loading && limit && (
+        <div className="space-y-2 text-white/90">
+          <div><b>User ID:</b> {limit.userID}</div>
+          <div><b>Daily Limit:</b> {limit.dailyLimit}</div>
+          <div><b>Monthly Limit:</b> {limit.monthlyLimit}</div>
         </div>
+      )}
+
+      <div className="mt-4 flex gap-2">
+        <button
+          onClick={() =>
+            limit
+              ? navigate(`/dashboard/admin/limits/update/${limit.limitID}`)
+              : navigate(`/dashboard/admin/limits/create?userId=${userId}`)
+          }
+          className="px-3 py-1.5 rounded-md text-white 
+                     bg-emerald-500 hover:bg-emerald-600 transition"
+        >
+          {limit ? "Update Limit" : "Create Limit"}
+        </button>
       </div>
 
-      <div className="rounded-lg border bg-white p-4">
-        {loading && <p className="text-slate-600">Loading…</p>}
-        {!loading && error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && !limit && (
-          <p className="text-slate-600">No limit found for user {userId}.</p>
-        )}
-
-        {!loading && limit && (
-          <div className="space-y-2">
-            <div><b>User ID:</b> {limit.userID}</div>
-            <div><b>Daily Limit:</b> {limit.dailyLimit}</div>
-            <div><b>Monthly Limit:</b> {limit.monthlyLimit}</div>
-          </div>
-        )}
-      </div>
     </div>
-  );
-}
+  </div>
+);
+ }

@@ -32,6 +32,12 @@ export default function useLogout(redirectTo = "/login") {
     // frontend: clear accessToken + role
     dispatch(logout());
 
+    
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+
+
     // navigate user
     navigate(redirectTo, { replace: true });
   };

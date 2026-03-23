@@ -1728,16 +1728,150 @@ export default function MerchantsTable() {
 //     </div>
 //   );
 
+//   return (
+//   <div className="space-y-3">
+//     <div className="mb-1">
+//       <h2 className="text-lg font-semibold">Merchants</h2>
+//       <p className="text-sm text-slate-500">View and manage merchant accounts</p>
+//     </div>
+
+//     <div className="overflow-auto border border-cyan-100 rounded-xl">
+//       <table className="min-w-full text-sm">
+//         <thead className="bg-cyan-50">
+//           <tr className="text-left">
+//             <th className="px-4 py-3">Merchant ID</th>
+//             <th className="px-4 py-3">Name</th>
+//             <th className="px-4 py-3">Email</th>
+//             <th className="px-4 py-3">Status</th>
+//             <th className="px-4 py-3">Check Settlement</th>
+//             <th className="px-4 py-3">Delete Merchant</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {loading && (
+//             <tr>
+//               <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-500">Loading merchants…</td>
+//             </tr>
+//           )}
+
+//           {!loading && error && (
+//             <tr>
+//               <td colSpan={HEAD_COLS} className="px-4 py-6 text-rose-700">{error}</td>
+//             </tr>
+//           )}
+
+//           {!loading && !error && current.length === 0 && (
+//             <tr>
+//               <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-500">No merchants found.</td>
+//             </tr>
+//           )}
+
+//           {!loading && !error && current.map((m) => {
+//             const id = getMerchantId(m);
+//             const status = (m.status || "").toLowerCase();
+//             const isActive = status === "active";
+
+//             return (
+//               <tr key={id} className="border-t hover:bg-cyan-50/50">
+//                 <td className="px-4 py-3 whitespace-nowrap">{id}</td>
+//                 <td className="px-4 py-3">{m.name ?? "—"}</td>
+//                 <td className="px-4 py-3">
+//                   <span className="block truncate max-w-[240px]" title={m.email}>{m.email ?? "—"}</span>
+//                 </td>
+//                 <td className="px-4 py-3">
+//                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+//                     isActive ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-700"
+//                   }`}>
+//                     {m.status ?? "—"}
+//                   </span>
+//                 </td>
+
+//                 <td className="px-4 py-3">
+//                   <button
+//                     className="border border-cyan-200 rounded-md px-3 py-1 bg-white text-slate-700 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+//                     type="button"
+//                     onClick={() => goToSettlement(id)}
+//                   >
+//                     Check Settlement
+//                   </button>
+//                 </td>
+
+//                 <td className="px-4 py-3">
+//                   <button
+//                     className="rounded-md px-3 py-1 bg-rose-800 text-white hover:bg-rose-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-400/40"
+//                     type="button"
+//                     onClick={() =>
+//                       openConfirm({
+//                         title: "Delete Merchant",
+//                         message: (
+//                           <div>
+//                             This action cannot be undone. Delete <strong>Merchant {id}</strong>?
+//                           </div>
+//                         ),
+//                         onConfirm: async () => {
+//                           await deleteMerchant(id);
+//                           setData((prev) => prev.filter((x) => getMerchantId(x) !== id));
+//                         },
+//                         confirmText: "Delete",
+//                         cancelText: "Cancel",
+//                       })
+//                     }
+//                     title="Delete merchant"
+//                   >
+//                     Delete
+//                   </button>
+//                 </td>
+//               </tr>
+//             );
+//           })}
+//         </tbody>
+//       </table>
+//     </div>
+
+//     {/* Pager */}
+//     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
+//       <span className="text-sm text-slate-600">
+//         Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+//       </span>
+
+//       <div className="flex items-center gap-3">
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canPrev}
+//           onClick={gotoPrev}
+//           type="button"
+//         >
+//           Previous
+//         </button>
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canNext}
+//           onClick={gotoNext}
+//           type="button"
+//         >
+//           Next
+//         </button>
+//       </div>
+//     </div>
+
+//     {/* ConfirmDialog props unchanged */}
+//   </div>
+// );
+
   return (
   <div className="space-y-3">
+
+    {/* Header */}
     <div className="mb-1">
-      <h2 className="text-lg font-semibold">Merchants</h2>
-      <p className="text-sm text-slate-500">View and manage merchant accounts</p>
+      <h2 className="text-lg font-semibold text-white">Merchants</h2>
+      <p className="text-sm text-slate-300">View and manage merchant accounts</p>
     </div>
 
-    <div className="overflow-auto border border-cyan-100 rounded-xl">
-      <table className="min-w-full text-sm">
-        <thead className="bg-cyan-50">
+    {/* Table */}
+    <div className="overflow-auto border border-white/10 rounded-xl bg-white/5 backdrop-blur-lg">
+      <table className="min-w-full text-sm text-slate-200">
+        <thead className="bg-white/10 text-slate-100">
           <tr className="text-left">
             <th className="px-4 py-3">Merchant ID</th>
             <th className="px-4 py-3">Name</th>
@@ -1751,112 +1885,151 @@ export default function MerchantsTable() {
         <tbody>
           {loading && (
             <tr>
-              <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-500">Loading merchants…</td>
+              <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-400">
+                Loading merchants…
+              </td>
             </tr>
           )}
 
           {!loading && error && (
             <tr>
-              <td colSpan={HEAD_COLS} className="px-4 py-6 text-rose-700">{error}</td>
+              <td colSpan={HEAD_COLS} className="px-4 py-6 text-rose-400">
+                {error}
+              </td>
             </tr>
           )}
 
           {!loading && !error && current.length === 0 && (
             <tr>
-              <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-500">No merchants found.</td>
+              <td colSpan={HEAD_COLS} className="px-4 py-6 text-slate-400">
+                No merchants found.
+              </td>
             </tr>
           )}
 
-          {!loading && !error && current.map((m) => {
-            const id = getMerchantId(m);
-            const status = (m.status || "").toLowerCase();
-            const isActive = status === "active";
+          {!loading &&
+            !error &&
+            current.map((m) => {
+              const id = getMerchantId(m);
+              const status = (m.status || "").toLowerCase();
+              const isActive = status === "active";
 
-            return (
-              <tr key={id} className="border-t hover:bg-cyan-50/50">
-                <td className="px-4 py-3 whitespace-nowrap">{id}</td>
-                <td className="px-4 py-3">{m.name ?? "—"}</td>
-                <td className="px-4 py-3">
-                  <span className="block truncate max-w-[240px]" title={m.email}>{m.email ?? "—"}</span>
-                </td>
-                <td className="px-4 py-3">
-                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
-                    isActive ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-700"
-                  }`}>
-                    {m.status ?? "—"}
-                  </span>
-                </td>
+              return (
+                <tr
+                  key={id}
+                  className="border-t border-white/10 hover:bg-white/10 transition"
+                >
+                  <td className="px-4 py-3 whitespace-nowrap">{id}</td>
+                  <td className="px-4 py-3">{m.name ?? "—"}</td>
 
-                <td className="px-4 py-3">
-                  <button
-                    className="border border-cyan-200 rounded-md px-3 py-1 bg-white text-slate-700 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
-                    type="button"
-                    onClick={() => goToSettlement(id)}
-                  >
-                    Check Settlement
-                  </button>
-                </td>
+                  <td className="px-4 py-3">
+                    <span className="block truncate max-w-[240px]" title={m.email}>
+                      {m.email ?? "—"}
+                    </span>
+                  </td>
 
-                <td className="px-4 py-3">
-                  <button
-                    className="rounded-md px-3 py-1 bg-rose-800 text-white hover:bg-rose-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-400/40"
-                    type="button"
-                    onClick={() =>
-                      openConfirm({
-                        title: "Delete Merchant",
-                        message: (
-                          <div>
-                            This action cannot be undone. Delete <strong>Merchant {id}</strong>?
-                          </div>
-                        ),
-                        onConfirm: async () => {
-                          await deleteMerchant(id);
-                          setData((prev) => prev.filter((x) => getMerchantId(x) !== id));
-                        },
-                        confirmText: "Delete",
-                        cancelText: "Cancel",
-                      })
-                    }
-                    title="Delete merchant"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+                        isActive
+                          ? "bg-green-500/20 text-green-300"
+                          : "bg-slate-500/20 text-slate-300"
+                      }`}
+                    >
+                      {m.status ?? "—"}
+                    </span>
+                  </td>
+
+                  {/* Check Settlement */}
+                  <td className="px-4 py-3">
+                    <button
+                      className="px-3 py-1.5 rounded-md 
+                                 text-white bg-blue-600 
+                                 hover:bg-blue-700 
+                                 shadow-[0_0_10px_rgba(59,130,246,0.4)]
+                                 hover:shadow-[0_0_15px_rgba(59,130,246,0.7)]
+                                 active:scale-95 transition"
+                      type="button"
+                      onClick={() => goToSettlement(id)}
+                    >
+                      Check Settlement
+                    </button>
+                  </td>
+
+                  {/* Delete Merchant */}
+                  <td className="px-4 py-3">
+                    <button
+                      className="
+ px-3 py-1.5 rounded-md text-white 
+  bg-rose-700 hover:bg-rose-800 
+  active:scale-95 transition"
+                      type="button"
+                      onClick={() =>
+                        openConfirm({
+                          title: "Delete Merchant",
+                          message: (
+                            <div>
+                              This action cannot be undone. Delete{" "}
+                              <strong>Merchant {id}</strong>?
+                            </div>
+                          ),
+                          onConfirm: async () => {
+                            await deleteMerchant(id);
+                            setData((prev) =>
+                              prev.filter((x) => getMerchantId(x) !== id)
+                            );
+                          },
+                          confirmText: "Delete",
+                          cancelText: "Cancel",
+                        })
+                      }
+                      title="Delete merchant"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
 
     {/* Pager */}
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
-      <span className="text-sm text-slate-600">
-        Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+      <span className="text-sm text-slate-300">
+        Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} /{" "}
+        {totalPages}
       </span>
 
       <div className="flex items-center gap-3">
         <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          className="px-3 py-1.5 rounded-md text-white 
+                     border border-white/20 bg-white/10 
+                     hover:bg-white/20 
+                     shadow-[0_0_10px_rgba(255,255,255,0.15)]
+                     hover:shadow-[0_0_15px_rgba(255,255,255,0.4)]
+                     disabled:opacity-40 active:scale-95 transition"
           disabled={!canPrev}
           onClick={gotoPrev}
-          type="button"
         >
           Previous
         </button>
+
         <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          className="px-3 py-1.5 rounded-md text-white 
+                     border border-white/20 bg-white/10 
+                     hover:bg-white/20 
+                     shadow-[0_0_10px_rgba(255,255,255,0.15)]
+                     hover:shadow-[0_0_15px_rgba(255,255,255,0.4)]
+                     disabled:opacity-40 active:scale-95 transition"
           disabled={!canNext}
           onClick={gotoNext}
-          type="button"
         >
           Next
         </button>
       </div>
     </div>
-
-    {/* ConfirmDialog props unchanged */}
   </div>
 );
-
 }

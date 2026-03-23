@@ -1433,13 +1433,13 @@
 // }
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../../services/authservices/authService";
 import Modal from "../../common/Modal";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../stores/authSlice";
-
+import { api } from "../../services/http";
 // Normalize role string
 function normalizeRole(roleRaw) {
   const r = String(roleRaw || "").trim().toLowerCase();
@@ -1454,8 +1454,7 @@ const ROLE_TO_PATH = {
   merchant: "/dashboard/merchant",
   admin: "/dashboard/admin",
   risk: "/dashboard/risk",
-  ops: "/dashboard/ops",
-  "ops-admin": "/dashboard/ops-admin",
+  ops: "/dashboard/ops"
 };
 
 const initial = { email: "", password: "", role: "" };
@@ -1474,6 +1473,20 @@ export default function Login() {
   const [sending, setSending] = useState(false);
   const [sentMsg, setSentMsg] = useState("");
   const [sendErr, setSendErr] = useState("");
+
+  useEffect(() => {
+  const loggedIn = localStorage.getItem("loggedIn");
+  const role = localStorage.getItem("role");
+
+  if (loggedIn === "true" && role) {
+    if (role === "Admin") navigate("/dashboard/admin");
+    else if (role === "User") navigate("/dashboard/user");
+    else if (role === "Merchant") navigate("/dashboard/merchant");
+    else if (role === "Ops") navigate("/dashboard/ops");
+    else if (role === "Risk") navigate("/dashboard/risk");
+  }
+}, []);
+
 
   // Validate input
   const validate = () => {
@@ -1536,6 +1549,12 @@ export default function Login() {
         })
       );
 
+      
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("role", backendRole);
+      localStorage.setItem("userId", res.data.userID || res.data.merchantID); 
+
+
       // Route by role
       const path = ROLE_TO_PATH[backendRole] || "/dashboard";
       navigate(path);
@@ -1579,7 +1598,7 @@ export default function Login() {
 
     try {
       setSending(true);
-      await http.post("/api/AuthMail/send-reset-link", { email });
+      await api.post("/api/AuthMail/send-reset-link", { email });
       setSentMsg("If this email is registered, a reset link has been sent.");
     } catch (e) {
       const msg =
@@ -1856,6 +1875,16 @@ export default function Login() {
         >
           {submitting ? "Signing in..." : "Sign In"}
         </button>
+
+        <p className="text-center text-sm text-gray-300 mt-4">
+          <button
+            onClick={() => navigate("/")}
+            className="text-[#12d8fa] hover:text-white transition underline decoration-transparent hover:decoration-[#12d8fa] duration-300"
+          >
+            ← Back to Home
+          </button>
+        </p>
+
       </form>
     </div>
 
@@ -1868,15 +1897,17 @@ export default function Login() {
         <>
           <button
             onClick={closeForgot}
-            className="px-3 py-1.5 border border-white/30 rounded-md text-white bg-white/10 backdrop-blur-md"
+            className="px-3 py-1.5 rounded-md text-white 
+            bg-white/20 backdrop-blur-md border border-white/25 hover:bg-white/30 transition"
             disabled={sending}
           >
             Close
           </button>
+
           <button
             onClick={sendResetLink}
-            className={`px-3 py-1.5 rounded-md text-white 
-            ${sending ? "bg-gray-400" : "bg-indigo-600"}`}
+            className={`px-3 py-1.5 rounded-md text-white font-medium
+            ${sending ? "bg-gray-500" : "bg-indigo-600 hover:bg-indigo-700"} transition`}
             disabled={sending}
           >
             {sending ? "Sending…" : "Send reset link"}
@@ -1884,22 +1915,33 @@ export default function Login() {
         </>
       }
     >
-      <p className="text-sm text-gray-200 mb-3">
-        Enter your account email and we will send a reset link.
-      </p>
+      <div 
+        className="
+          p-4 rounded-xl 
+          bg-[#ffffffdd] text-gray-800 
+          shadow-2xl 
+          border border-white/40
+          backdrop-blur-xl
+        "
+      >
+        <p className="text-sm text-gray-700 mb-3">
+          Enter your account email and we will send a reset link.
+        </p>
 
-      <input
-        type="email"
-        className={`w-full p-2.5 rounded-lg bg-white/10 text-white 
-          backdrop-blur-lg outline-none ${
-          sendErr ? "border border-red-400" : "border border-white/20"
-        }`}
-        value={forgotEmail}
-        onChange={(e) => setForgotEmail(e.target.value)}
-      />
+        <input
+          type="email"
+          className={`
+            w-full p-2.5 rounded-lg bg-white/90 text-gray-800 
+            outline-none
+            ${sendErr ? "border border-red-400" : "border border-gray-300"}
+          `}
+          value={forgotEmail}
+          onChange={(e) => setForgotEmail(e.target.value)}
+        />
 
-      {sendErr && <p className="text-red-400 text-sm mt-1">{sendErr}</p>}
-      {sentMsg && <p className="text-green-400 text-sm mt-1">{sentMsg}</p>}
+        {sendErr && <p className="text-red-500 text-sm mt-1">{sendErr}</p>}
+        {sentMsg && <p className="text-green-700 text-sm mt-1">{sentMsg}</p>}
+      </div>
     </Modal>
   </div>
 );

@@ -16,6 +16,7 @@ const initial = {
   name: "",
   email: "",
   password: "",
+  confirmPassword: "",
   phone: "",
   role: "",
   category: "",
@@ -34,6 +35,8 @@ export default function Register() {
     else if (!/^\S+@\S+\.\S+$/.test(formData.email)) e.email = "Invalid email.";
     if (!formData.password) e.password = "Password is required.";
     else if (formData.password.length < 6) e.password = "Minimum 6 characters.";
+    if (!formData.confirmPassword) e.confirmPassword = "Please confirm password.";
+    else if (formData.confirmPassword !== formData.password) e.confirmPassword = "Passwords do not match.";
     if (!formData.phone) e.phone = "Phone is required.";
     else if (!/^\d{7,15}$/.test(formData.phone)) e.phone = "Phone must be 7–15 digits.";
     if (!formData.role) e.role = "Role is required.";
@@ -217,7 +220,7 @@ export default function Register() {
     <div className="w-full max-w-xs text-white"> 
       {/* TITLE */}
       <div className="text-center mb-5">
-        <h1 className="text-2xl font-bold tracking-wide">Create Account</h1>
+        <h1 className="text-2xl font-bold tracking-wide">Create New Account</h1>
         <p className="text-xs text-gray-300 mt-1">
           Register for a new PaySphere account
         </p>
@@ -228,8 +231,9 @@ export default function Register() {
 
         {/* FULL NAME */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Full Name</label>
+          <label htmlFor="name" className="text-[11px] font-medium text-gray-300">Full Name</label>
           <input
+            id="name"
             type="text"
             name="name"
             placeholder="John Doe"
@@ -247,8 +251,9 @@ export default function Register() {
 
         {/* EMAIL */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Email</label>
+          <label htmlFor="email" className="text-[11px] font-medium text-gray-300">Email</label>
           <input
+            id="email"
             type="email"
             name="email"
             placeholder="you@example.com"
@@ -266,8 +271,9 @@ export default function Register() {
 
         {/* PASSWORD */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Password</label>
+          <label htmlFor="password" className="text-[11px] font-medium text-gray-300">Password</label>
           <input
+            id="password"
             type="password"
             name="password"
             placeholder="Create a password"
@@ -287,8 +293,9 @@ export default function Register() {
 
         {/* CONFIRM PASSWORD */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Confirm Password</label>
+          <label htmlFor="confirmPassword" className="text-[11px] font-medium text-gray-300">Confirm Password</label>
           <input
+            id="confirmPassword"
             type="password"
             name="confirmPassword"
             placeholder="Retype password"
@@ -308,8 +315,9 @@ export default function Register() {
 
         {/* PHONE */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Phone</label>
+          <label htmlFor="phone" className="text-[11px] font-medium text-gray-300">Phone</label>
           <input
+            id="phone"
             type="text"
             name="phone"
             placeholder="9876543210"
@@ -329,8 +337,9 @@ export default function Register() {
 
         {/* ROLE */}
         <div>
-          <label className="text-[11px] font-medium text-gray-300">Account Type</label>
+          <label htmlFor="role" className="text-[11px] font-medium text-gray-300">Account Type</label>
           <select
+            id="role"
             name="role"
             className={`
               w-full mt-1 p-2 rounded-lg 
@@ -354,8 +363,9 @@ export default function Register() {
         {/* CATEGORY */}
         {formData.role === "Merchant" && (
           <div>
-            <label className="text-[11px] font-medium text-gray-300">Category</label>
+            <label htmlFor="category" className="text-[11px] font-medium text-gray-300">Category</label>
             <select
+              id="category"
               name="category"
               className={`
                 w-full mt-1 p-2 rounded-lg bg-gray-200/30 text-white 

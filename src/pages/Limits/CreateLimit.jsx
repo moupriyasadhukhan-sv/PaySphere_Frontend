@@ -180,71 +180,151 @@ export default function CreateLimit() {
     }
   };
 
+  // return (
+  //   <div className="p-6">
+  //     <div className="mb-4 flex items-center justify-between">
+  //       <h2 className="text-xl font-semibold">Create Limit</h2>
+  //       <button
+  //         onClick={() => navigate(-1)}
+  //         className="px-3 py-1.5 rounded-md border hover:bg-slate-50"
+  //       >
+  //         Back
+  //       </button>
+  //     </div>
+
+  //     <form
+  //       onSubmit={onSubmit}
+  //       className="rounded-lg border bg-white p-4 max-w-lg space-y-4"
+  //     >
+  //       {error && <div className="text-red-500 text-sm">{error}</div>}
+
+  //       <div>
+  //         <label className="block text-sm font-medium mb-1">User ID</label>
+  //         <input
+  //           type="number"
+  //           name="userID"
+  //           value={form.userID}
+  //           onChange={onChange}
+  //           className="w-full rounded-md border border-slate-300 px-3 py-2"
+  //           required
+  //         />
+  //       </div>
+
+  //       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  //         <div>
+  //           <label className="block text-sm font-medium mb-1">Daily Limit</label>
+  //           <input
+  //             type="number"
+  //             name="dailyLimit"
+  //             value={form.dailyLimit}
+  //             onChange={onChange}
+  //             className="w-full rounded-md border border-slate-300 px-3 py-2"
+  //             placeholder="e.g., 100000"
+  //           />
+  //         </div>
+  //         <div>
+  //           <label className="block text-sm font-medium mb-1">Monthly Limit</label>
+  //           <input
+  //             type="number"
+  //             name="monthlyLimit"
+  //             value={form.monthlyLimit}
+  //             onChange={onChange}
+  //             className="w-full rounded-md border border-slate-300 px-3 py-2"
+  //             placeholder="e.g., 100000000"
+  //           />
+  //         </div>
+  //       </div>
+
+  //       <div className="pt-2">
+  //         <button
+  //           type="submit"
+  //           disabled={submitting}
+  //           className="px-4 py-2 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60"
+  //         >
+  //           {submitting ? "Saving…" : "Create Limit"}
+  //         </button>
+  //       </div>
+  //     </form>
+  //   </div>
+  // );
+
   return (
-    <div className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Create Limit</h2>
+  <div className="min-h-screen flex items-center justify-center p-6">
+    
+    <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl 
+                    border border-white/20 rounded-2xl p-6
+                    shadow-xl animate-[fadeIn_0.4s_ease]">
+
+      {/* Card Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-white">Create Limit</h2>
+
         <button
           onClick={() => navigate(-1)}
-          className="px-3 py-1.5 rounded-md border hover:bg-slate-50"
+          className="px-3 py-1.5 rounded-md border border-white/30 
+                     text-white hover:bg-white/10 transition"
         >
           Back
         </button>
       </div>
 
-      <form
-        onSubmit={onSubmit}
-        className="rounded-lg border bg-white p-4 max-w-lg space-y-4"
-      >
-        {error && <div className="text-red-500 text-sm">{error}</div>}
+      {/* Form */}
+      <form onSubmit={onSubmit} className="space-y-4">
+
+        {error && <div className="text-red-400 text-sm">{error}</div>}
 
         <div>
-          <label className="block text-sm font-medium mb-1">User ID</label>
+          <label className="block text-sm text-white/80 mb-1">User ID</label>
           <input
             type="number"
             name="userID"
             value={form.userID}
             onChange={onChange}
-            className="w-full rounded-md border border-slate-300 px-3 py-2"
+            className="w-full rounded-md border border-white/20 bg-white/10 
+                       text-white px-3 py-2 focus:outline-none focus:ring-2 
+                       focus:ring-purple-400/40"
             required
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Daily Limit</label>
+            <label className="block text-sm text-white/80 mb-1">Daily Limit</label>
             <input
               type="number"
               name="dailyLimit"
               value={form.dailyLimit}
               onChange={onChange}
-              className="w-full rounded-md border border-slate-300 px-3 py-2"
-              placeholder="e.g., 100000"
+              className="w-full rounded-md border border-white/20 bg-white/10 
+                         text-white px-3 py-2"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium mb-1">Monthly Limit</label>
+            <label className="block text-sm text-white/80 mb-1">Monthly Limit</label>
             <input
               type="number"
               name="monthlyLimit"
               value={form.monthlyLimit}
               onChange={onChange}
-              className="w-full rounded-md border border-slate-300 px-3 py-2"
-              placeholder="e.g., 100000000"
+              className="w-full rounded-md border border-white/20 bg-white/10 
+                         text-white px-3 py-2"
             />
           </div>
         </div>
 
-        <div className="pt-2">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="px-4 py-2 rounded-md text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Create Limit"}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-4 py-2 rounded-md text-white 
+                     bg-emerald-500 hover:bg-emerald-600 
+                     disabled:opacity-60 transition"
+        >
+          {submitting ? "Saving…" : "Create Limit"}
+        </button>
+
       </form>
     </div>
-  );
+  </div>
+);
 }

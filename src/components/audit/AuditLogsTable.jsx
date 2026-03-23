@@ -709,28 +709,111 @@ export default function AuditLogsTable() {
 // }
 
 
-return (
+// return (
+//   <div className="space-y-3">
+//     <div className="flex items-center justify-between">
+//       <div>
+//         <h2 className="text-lg font-semibold">Audit Logs</h2>
+//         <p className="text-sm text-slate-500">System audit trail</p>
+//       </div>
+
+//       <div className="flex flex-wrap items-end gap-2">
+//         <div className="flex flex-col">
+//           <label className="text-xs text-slate-600">User ID</label>
+//           <input
+//             className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+//             placeholder="e.g. 43"
+//             value={filterUserId}
+//             onChange={(e) => setFilterUserId(e.target.value)}
+//           />
+//         </div>
+//         <div className="flex flex-col">
+//           <label className="text-xs text-slate-600">Action</label>
+//           <input
+//             className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+//             placeholder='e.g. "Logout"'
+//             value={filterAction}
+//             onChange={(e) => setFilterAction(e.target.value)}
+//           />
+//         </div>
+//       </div>
+//     </div>
+
+//     <div className="overflow-auto border border-cyan-100 rounded-xl">
+//       <table className="min-w-full text-sm">
+//         <thead className="bg-cyan-50">
+//           <tr className="text-left">
+//             <th className="px-4 py-3">Audit ID</th>
+//             <th className="px-4 py-3">User ID</th>
+//             <th className="px-4 py-3">Action</th>
+//             <th className="px-4 py-3">Timestamp (Local)</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {/* ...loading/error/empty unchanged */}
+//           {!loading && !error && current.map((row) => (
+//             <tr key={row.auditId ?? `${row.userId}-${row.timestampUtc}`} className="border-t hover:bg-cyan-50/50">
+//               <td className="px-4 py-3 whitespace-nowrap">{row.auditId ?? "—"}</td>
+//               <td className="px-4 py-3 whitespace-nowrap">{row.userId ?? "—"}</td>
+//               <td className="px-4 py-3">{row.action ?? "—"}</td>
+//               <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+
+//     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
+//       <span className="text-sm text-slate-600">
+//         Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+//       </span>
+
+//       <div className="flex items-center gap-3">
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canPrev}
+//           onClick={onPrev}
+//         >
+//           Previous
+//         </button>
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canNext}
+//           onClick={onNext}
+//         >
+//           Next
+//         </button>
+//       </div>
+//     </div>
+//   </div>
+// );
+
+  return (
   <div className="space-y-3">
+
+    {/* Header */}
     <div className="flex items-center justify-between">
       <div>
-        <h2 className="text-lg font-semibold">Audit Logs</h2>
-        <p className="text-sm text-slate-500">System audit trail</p>
+        <h2 className="text-lg font-semibold text-white">Audit Logs</h2>
+        <p className="text-sm text-slate-300">System audit trail</p>
       </div>
 
-      <div className="flex flex-wrap items-end gap-2">
+      {/* Filters */}
+      <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col">
-          <label className="text-xs text-slate-600">User ID</label>
+          <label className="text-xs text-slate-300">User ID</label>
           <input
-            className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+            className="border border-white/10 bg-white/10 text-white placeholder-slate-400 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50"
             placeholder="e.g. 43"
             value={filterUserId}
             onChange={(e) => setFilterUserId(e.target.value)}
           />
         </div>
+
         <div className="flex flex-col">
-          <label className="text-xs text-slate-600">Action</label>
+          <label className="text-xs text-slate-300">Action</label>
           <input
-            className="border border-cyan-200 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+            className="border border-white/10 bg-white/10 text-white placeholder-slate-400 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50"
             placeholder='e.g. "Logout"'
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
@@ -739,9 +822,10 @@ return (
       </div>
     </div>
 
-    <div className="overflow-auto border border-cyan-100 rounded-xl">
-      <table className="min-w-full text-sm">
-        <thead className="bg-cyan-50">
+    {/* Table */}
+    <div className="overflow-auto border border-white/10 rounded-xl bg-white/5 backdrop-blur-lg">
+      <table className="min-w-full text-sm text-slate-200">
+        <thead className="bg-white/10 text-slate-100">
           <tr className="text-left">
             <th className="px-4 py-3">Audit ID</th>
             <th className="px-4 py-3">User ID</th>
@@ -749,35 +833,64 @@ return (
             <th className="px-4 py-3">Timestamp (Local)</th>
           </tr>
         </thead>
+
         <tbody>
-          {/* ...loading/error/empty unchanged */}
-          {!loading && !error && current.map((row) => (
-            <tr key={row.auditId ?? `${row.userId}-${row.timestampUtc}`} className="border-t hover:bg-cyan-50/50">
-              <td className="px-4 py-3 whitespace-nowrap">{row.auditId ?? "—"}</td>
-              <td className="px-4 py-3 whitespace-nowrap">{row.userId ?? "—"}</td>
-              <td className="px-4 py-3">{row.action ?? "—"}</td>
-              <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
-            </tr>
-          ))}
+          {/* (loading, error, empty stay same) */}
+          {!loading &&
+            !error &&
+            current.map((row) => (
+              <tr
+                key={row.auditId ?? `${row.userId}-${row.timestampUtc}`}
+                className="border-t border-white/10 hover:bg-white/10 transition"
+              >
+                <td className="px-4 py-3 whitespace-nowrap">
+                  {row.auditId ?? "—"}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  {row.userId ?? "—"}
+                </td>
+                <td className="px-4 py-3">{row.action ?? "—"}</td>
+                <td className="px-4 py-3">{formatTs(row.timestampUtc)}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
 
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
-      <span className="text-sm text-slate-600">
-        Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} / {totalPages}
+    {/* Pagination */}
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+      <span className="text-sm text-slate-300">
+        Showing {current.length} of {total} &nbsp;|&nbsp; Page {pageSafe} /{" "}
+        {totalPages}
       </span>
 
       <div className="flex items-center gap-3">
-        <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+                <button
+          className="px-3 py-1.5 rounded-md text-white 
+                    border border-white/20 
+                    bg-white/10 
+                    hover:bg-white/20 
+                    transition 
+                    disabled:opacity-40 
+                    shadow-[0_0_10px_rgba(255,255,255,0.15)] 
+                    hover:shadow-[0_0_15px_rgba(255,255,255,0.35)] 
+                    active:scale-95"
           disabled={!canPrev}
           onClick={onPrev}
         >
           Previous
         </button>
+
         <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+          className="px-3 py-1.5 rounded-md text-white 
+                    border border-white/20 
+                    bg-white/10 
+                    hover:bg-white/20 
+                    transition 
+                    disabled:opacity-40 
+                    shadow-[0_0_10px_rgba(255,255,255,0.15)] 
+                    hover:shadow-[0_0_15px_rgba(255,255,255,0.35)] 
+                    active:scale-95"
           disabled={!canNext}
           onClick={onNext}
         >
@@ -787,4 +900,4 @@ return (
     </div>
   </div>
 );
-}
+ }

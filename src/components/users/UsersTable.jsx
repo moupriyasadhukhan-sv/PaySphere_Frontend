@@ -711,137 +711,285 @@ export default function UsersTable() {
   // ===================== UI BELOW ==============================
   // ============================================================
 
-  return (
+//   return (
+//     <div>
+//       <div className="mb-3">
+//         <h2 className="text-lg font-semibold">User Management</h2>
+//         <p className="text-sm text-slate-500">View and manage all registered users</p>
+//       </div>
+
+//       <div className="overflow-auto border border-cyan-100 rounded-xl">
+//         <table className="min-w-full text-sm">
+//           <thead className="bg-cyan-50">
+//             <tr className="text-left">
+//               <th className="px-4 py-3">User ID</th>
+//               <th className="px-4 py-3">Name</th>
+//               <th className="px-4 py-3">Status</th>
+//               <th className="px-4 py-3">Balance</th>
+//               <th className="px-4 py-3">Create Limit</th>
+//               <th className="px-4 py-3">Show Limit</th>
+//               <th className="px-4 py-3">Update Limit</th>
+//             </tr>
+//           </thead>
+
+//           <tbody>
+//             {loading && (
+//               <tr>
+//                 <td colSpan={7} className="px-4 py-6 text-slate-500">
+//                   Loading users…
+//                 </td>
+//               </tr>
+//             )}
+
+//             {!loading && rows.length === 0 && (
+//               <tr>
+//                 <td colSpan={7} className="px-4 py-6 text-slate-500">
+//                   No users found.
+//                 </td>
+//               </tr>
+//             )}
+
+//             {!loading &&
+//               rows.map((r) => (
+//                 <tr key={r.userId} className="border-t hover:bg-cyan-50/50">
+//                   <td className="px-4 py-3">{r.userId}</td>
+//                   <td className="px-4 py-3">
+//                     <span className="font-medium">{r.name}</span>
+//                   </td>
+//                   <td className="px-4 py-3">
+//                     <span
+//                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+//                         (r.status || "").toLowerCase() === "active"
+//                           ? "bg-green-100 text-green-700"
+//                           : "bg-slate-100 text-slate-700"
+//                       }`}
+//                     >
+//                       {r.status}
+//                     </span>
+//                   </td>
+//                   <td className="px-4 py-3">{currency(r.balance)}</td>
+
+//                   {/* Create Limit */}
+//                   <td className="px-4 py-3">
+//                     <button
+//                       onClick={() =>
+//                         navigate(
+//                           `/dashboard/admin/limits/create?userId=${encodeURIComponent(
+//                             r.userId
+//                           )}`
+//                         )
+//                       }
+//                       className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
+//                     >
+//                       Create Limit
+//                     </button>
+//                   </td>
+
+//                   {/* Show Limit */}
+//                   <td className="px-4 py-3">
+//                     <button
+//                       onClick={() =>
+//                         navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)
+//                       }
+//                       className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
+//                     >
+//                       Show Limit
+//                     </button>
+//                   </td>
+
+//                   {/* Update Limit */}
+//                   <td className="px-4 py-3">
+//                     {r.limitId ? (
+//                       <button
+//                         onClick={() =>
+//                           navigate(`/dashboard/admin/limits/update/${r.limitId}`)
+//                         }
+//                         className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
+//                       >
+//                         Update Limit
+//                       </button>
+//                     ) : (
+//                       <span className="text-slate-400 italic text-xs">No limit set</span>
+//                     )}
+//                   </td>
+//                 </tr>
+//               ))}
+//           </tbody>
+//         </table>
+//       </div>
+
+//       {/* Pager */}
+//       <div className="flex items-center justify-end gap-3 mt-3">
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canPrev}
+//           onClick={gotoPrev}
+//         >
+//           Previous
+//         </button>
+
+//         <span className="text-sm text-slate-600">
+//           Page {pageSafe}
+//           {totalPages ? ` / ${totalPages}` : ""} • Showing {rows.length} of{" "}
+//           {Number.isFinite(total) ? total : rows.length}
+//         </span>
+
+//         <button
+//           className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
+//           disabled={!canNext}
+//           onClick={gotoNext}
+//         >
+//           Next
+//         </button>
+//       </div>
+//     </div>
+//   );
+return (
     <div>
-      <div className="mb-3">
-        <h2 className="text-lg font-semibold">User Management</h2>
-        <p className="text-sm text-slate-500">View and manage all registered users</p>
-      </div>
+  <div className="mb-3">
+    <h2 className="text-lg font-semibold text-white">User Management</h2>
+    <p className="text-sm text-slate-300">View and manage all registered users</p>
+  </div>
 
-      <div className="overflow-auto border border-cyan-100 rounded-xl">
-        <table className="min-w-full text-sm">
-          <thead className="bg-cyan-50">
-            <tr className="text-left">
-              <th className="px-4 py-3">User ID</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Balance</th>
-              <th className="px-4 py-3">Create Limit</th>
-              <th className="px-4 py-3">Show Limit</th>
-              <th className="px-4 py-3">Update Limit</th>
+  <div className="overflow-auto border border-white/10 backdrop-blur-lg rounded-xl bg-white/5">
+    <table className="min-w-full text-sm text-slate-200">
+      <thead className="bg-white/10 text-slate-100">
+        <tr className="text-left">
+          <th className="px-4 py-3">User ID</th>
+          <th className="px-4 py-3">Name</th>
+          <th className="px-4 py-3">Status</th>
+          <th className="px-4 py-3">Balance</th>
+          <th className="px-4 py-3">Create Limit</th>
+          <th className="px-4 py-3">Show Limit</th>
+          <th className="px-4 py-3">Update Limit</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {loading && (
+          <tr>
+            <td colSpan={7} className="px-4 py-6 text-slate-400 text-center">
+              Loading users…
+            </td>
+          </tr>
+        )}
+
+        {!loading && rows.length === 0 && (
+          <tr>
+            <td colSpan={7} className="px-4 py-6 text-slate-400 text-center">
+              No users found.
+            </td>
+          </tr>
+        )}
+
+        {!loading &&
+          rows.map((r) => (
+            <tr key={r.userId} className="border-t border-white/10 hover:bg-white/10 transition">
+              <td className="px-4 py-3">{r.userId}</td>
+              <td className="px-4 py-3">
+                <span className="font-medium text-white">{r.name}</span>
+              </td>
+
+              {/* Status */}
+              <td className="px-4 py-3">
+                <span
+                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+                    (r.status || "").toLowerCase() === "active"
+                      ? "bg-green-500/20 text-green-300"
+                      : "bg-slate-500/20 text-slate-300"
+                  }`}
+                >
+                  {r.status}
+                </span>
+              </td>
+
+              <td className="px-4 py-3">{currency(r.balance)}</td>
+
+              {/* Create Limit Btn */}
+              <td className="px-4 py-3">
+                <button
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/admin/limits/create?userId=${encodeURIComponent(
+                        r.userId
+                      )}`
+                    )
+                  }
+                  className="
+px-3 py-1.5 rounded-md text-white 
+  bg-cyan-500 hover:bg-cyan-600 
+  shadow-[0_0_12px_rgba(0,255,255,0.5)]
+  hover:shadow-[0_0_18px_rgba(0,255,255,0.8)]
+  active:scale-95 transition
+-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition shadow"
+                >
+                  Create Limit
+                </button>
+              </td>
+
+              {/* Show Limit Btn */}
+              <td className="px-4 py-3">
+                <button
+                  onClick={() =>
+                    navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)
+                  }
+                  className="px-3 py-1.5 rounded-md text-white bg-teal-600 hover:bg-teal-700 active:scale-95 transition shadow"
+                >
+                  Show Limit
+                </button>
+              </td>
+
+              {/* Update Limit Btn */}
+              <td className="px-4 py-3">
+                {r.limitId ? (
+                  <button
+                    onClick={() =>
+                      navigate(`/dashboard/admin/limits/update/${r.limitId}`)
+                    }
+                    className="
+px-3 py-1.5 rounded-md text-white 
+  bg-yellow-500 hover:bg-yellow-600 
+  shadow-[0_0_10px_rgba(255,200,0,0.5)]
+  hover:shadow-[0_0_15px_rgba(255,200,0,0.8)]
+  active:scale-95 transition
+-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 active:scale-95 transition shadow"
+                  >
+                    Update Limit
+                  </button>
+                ) : (
+                  <span className="text-slate-500 italic text-xs">No limit set</span>
+                )}
+              </td>
             </tr>
-          </thead>
+          ))}
+      </tbody>
+    </table>
+  </div>
 
-          <tbody>
-            {loading && (
-              <tr>
-                <td colSpan={7} className="px-4 py-6 text-slate-500">
-                  Loading users…
-                </td>
-              </tr>
-            )}
+  {/* Pager */}
+  <div className="flex items-center justify-end gap-3 mt-3">
+    <button
+      className="px-3 py-1.5 border border-white/10 text-white rounded-md disabled:opacity-40 bg-white/10 hover:bg-white/20 active:scale-95 transition"
+      disabled={!canPrev}
+      onClick={gotoPrev}
+    >
+      Previous
+    </button>
 
-            {!loading && rows.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-6 text-slate-500">
-                  No users found.
-                </td>
-              </tr>
-            )}
+    <span className="text-sm text-slate-300">
+      Page {pageSafe}
+      {totalPages ? ` / ${totalPages}` : ""} • Showing {rows.length} of{" "}
+      {Number.isFinite(total) ? total : rows.length}
+    </span>
 
-            {!loading &&
-              rows.map((r) => (
-                <tr key={r.userId} className="border-t hover:bg-cyan-50/50">
-                  <td className="px-4 py-3">{r.userId}</td>
-                  <td className="px-4 py-3">
-                    <span className="font-medium">{r.name}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
-                        (r.status || "").toLowerCase() === "active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-slate-100 text-slate-700"
-                      }`}
-                    >
-                      {r.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">{currency(r.balance)}</td>
-
-                  {/* Create Limit */}
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/dashboard/admin/limits/create?userId=${encodeURIComponent(
-                            r.userId
-                          )}`
-                        )
-                      }
-                      className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
-                    >
-                      Create Limit
-                    </button>
-                  </td>
-
-                  {/* Show Limit */}
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() =>
-                        navigate(`/dashboard/admin/limits/${encodeURIComponent(r.userId)}`)
-                      }
-                      className="px-3 py-1.5 rounded-md text-white bg-cyan-600 hover:bg-cyan-700 shadow-sm"
-                    >
-                      Show Limit
-                    </button>
-                  </td>
-
-                  {/* Update Limit */}
-                  <td className="px-4 py-3">
-                    {r.limitId ? (
-                      <button
-                        onClick={() =>
-                          navigate(`/dashboard/admin/limits/update/${r.limitId}`)
-                        }
-                        className="px-3 py-1.5 rounded-md text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
-                      >
-                        Update Limit
-                      </button>
-                    ) : (
-                      <span className="text-slate-400 italic text-xs">No limit set</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pager */}
-      <div className="flex items-center justify-end gap-3 mt-3">
-        <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
-          disabled={!canPrev}
-          onClick={gotoPrev}
-        >
-          Previous
-        </button>
-
-        <span className="text-sm text-slate-600">
-          Page {pageSafe}
-          {totalPages ? ` / ${totalPages}` : ""} • Showing {rows.length} of{" "}
-          {Number.isFinite(total) ? total : rows.length}
-        </span>
-
-        <button
-          className="px-3 py-1.5 border border-cyan-200 rounded-md disabled:opacity-50 bg-white hover:bg-cyan-50"
-          disabled={!canNext}
-          onClick={gotoNext}
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  );
-}
+    <button
+      className="px-3 py-1.5 border border-white/10 text-white rounded-md disabled:opacity-40 bg-white/10 hover:bg-white/20 active:scale-95 transition"
+      disabled={!canNext}
+      onClick={gotoNext}
+    >
+      Next
+    </button>
+  </div>
+</div>
+);
+ }
