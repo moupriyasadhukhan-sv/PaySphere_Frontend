@@ -1,7 +1,9 @@
+
 // // src/routes/AppRoutes.jsx
 // import { Routes, Route, Navigate } from "react-router-dom";
 // import ProtectedRoute from "../components/ProtectedRoute";
 
+// // Dashboards
 // import AdminDashboard from "../pages/Dashboards/AdminDashboard";
 // import RegisterStaff from "../pages/Dashboards/RegisterStaff";
 // import MerchantDashboard from "../pages/Dashboards/MerchantDashboard";
@@ -10,256 +12,233 @@
 // import RiskDashboard from "../pages/Dashboards/RiskDashboard";
 // import UserDashboard from "../pages/Dashboards/UserDashboard";
 
+// // Auth pages
 // import Login from "../pages/entrypages/login";
 // import Registration from "../pages/entrypages/registration";
 
-// import Landing from "../pages/landing/Landing";
-
+// // Feature pages
 // import ShowLimit from "../pages/Limits/ShowLimit";
 // import CreateLimit from "../pages/Limits/CreateLimit";
+// import UpdateLimit from "../pages/Limits/UpdateLimit";
+
+// import MerchantSettlements from "../pages/settlements/MerchantSettlements";
+// // Landing (public)
+// import Landing from "../pages/landing/Landing";
 
 // export default function AppRoutes() {
 //   return (
 //     <Routes>
-//       {/* Public */}
+//       ===== Public =====
 //       <Route path="/" element={<Landing />} />
 //       <Route path="/login" element={<Login />} />
 //       <Route path="/register" element={<Registration />} />
 
-//       {/* Old scheme */}
+//       {/* Backward-compat: /dashboard -> /dashboard/admin */}
 //       <Route path="/dashboard" element={<Navigate to="/dashboard/admin" replace />} />
 
-//       {/* <Route
-//         path="/dashboard/admin"
-//         element={
-//           <ProtectedRoute allowedRoles={["Admin"]}>
-//             <AdminDashboard />
-//           </ProtectedRoute>
-//         }
-//       />
+//       {/* ===== Admin (nested) =====
+//          NOTE: AdminDashboard MUST render nested routes via useOutlet() or <Outlet/>.
+//          Example: const outlet = useOutlet(); return outlet ? <Shell>{outlet}</Shell> : <Shell>Home</Shell>
+//       */}
 //       <Route
-//         path="/dashboard/admin/register-staff"
-//         element={
-//           <ProtectedRoute allowedRoles={["Admin"]}>
-//             <RegisterStaff />
-//           </ProtectedRoute>
-//         }
-//       /> */}
-
-//         <Route
 //         path="/dashboard/admin"
 //         element={
-//           <ProtectedRoute allowedRoles={["Admin"]}>
+//           <ProtectedRoute allowedRoles={["admin"]}>
 //             <AdminDashboard />
 //           </ProtectedRoute>
 //         }
 //       >
-//         {/* Index (Admin home) at /dashboard/admin */}
-//         {/* <Route index element={<AdminDashboard />} /> */}
-
-//         {/* Register staff at /dashboard/admin/register-staff */}
+//         {/* Child pages under /dashboard/admin/... */}
 //         <Route path="register-staff" element={<RegisterStaff />} />
 
-//         {/* Limits pages now nested under /dashboard/admin/limits/... */}
-//         <Route path="limits/create" element={<CreateLimit />} />
-//         <Route path="limits/:userId" element={<ShowLimit />} />
+//         {/* Limits nested group: /dashboard/admin/limits/create and /dashboard/admin/limits/:userId */}
+//         <Route path="limits">
+//           {/* <Route path="create" element={<CreateLimit />} />
+//           <Route path=":userId" element={<ShowLimit />} /> */}
+//           <Route path="create" element={<CreateLimit />} />
+//           <Route path="update/:limitId" element={<UpdateLimit />} />   {/* <-- ADD THIS */}
+//           <Route path=":userId" element={<ShowLimit />} />
+
+          
+//         </Route>
+//         <Route path="settlements/merchant/:merchantId" element={<MerchantSettlements />} />
+      
 //       </Route>
 
-
-
-
+//       {/* ===== Other role dashboards (top-level) ===== */}
 //       <Route
 //         path="/dashboard/merchant"
 //         element={
-//           <ProtectedRoute allowedRoles={["Merchant"]}>
+//           <ProtectedRoute allowedRoles={["merchant"]}>
 //             <MerchantDashboard />
 //           </ProtectedRoute>
 //         }
 //       />
+
 //       <Route
 //         path="/dashboard/ops"
 //         element={
-//           <ProtectedRoute allowedRoles={["Ops"]}>
+//           <ProtectedRoute allowedRoles={["ops"]}>
 //             <OpsDashboard />
 //           </ProtectedRoute>
 //         }
 //       />
+
 //       <Route
 //         path="/dashboard/ops-admin"
 //         element={
-//           <ProtectedRoute allowedRoles={["Admin", "Ops"]}>
+//           <ProtectedRoute allowedRoles={["admin", "ops"]}>
 //             <OpsAdminDashboard />
 //           </ProtectedRoute>
 //         }
 //       />
+
 //       <Route
 //         path="/dashboard/risk"
 //         element={
-//           <ProtectedRoute allowedRoles={["Risk"]}>
+//           <ProtectedRoute allowedRoles={["risk"]}>
 //             <RiskDashboard />
 //           </ProtectedRoute>
 //         }
 //       />
+
 //       <Route
 //         path="/dashboard/user"
 //         element={
-//           <ProtectedRoute allowedRoles={["User"]}>
+//           <ProtectedRoute allowedRoles={["user"]}>
 //             <UserDashboard />
 //           </ProtectedRoute>
 //         }
 //       />
 
-      
-//       <Route
-//         path="/limits/create"
-//         element={
-//           <ProtectedRoute allowedRoles={["Admin"]}>
-//             <CreateLimit />
-//           </ProtectedRoute>
-//         }
-//       />
+//       {/* ===== IMPORTANT =====
+//           Remove old top-level /limits routes to avoid duplicate matches:
+//           <Route path="/limits/create" ... />
+//           <Route path="/limits/:userId" ... />
+//       */}
 
-      
-//       <Route
-//         path="/limits/:userId"
-//         element={
-//           <ProtectedRoute allowedRoles={["Admin", "Ops", "Risk"]}>
-//             <ShowLimit />
-//           </ProtectedRoute>
-//         }
-//       />
-
-
-
-        
-//       {/* 404 */}
-//       <Route path="*" element={<div className="p-6">Not Found</div>} />
+//       {/* ===== 404 ===== */}
+//       <Route path="*" element={<Navigate to="/" replace />} />
 //     </Routes>
 //   );
 // }
 
 
-
-// src/routes/AppRoutes.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import ProtectedRoute from "../components/ProtectedRoute";
 
-// Dashboards
-import AdminDashboard from "../pages/Dashboards/AdminDashboard";
-import RegisterStaff from "../pages/Dashboards/RegisterStaff";
-import MerchantDashboard from "../pages/Dashboards/MerchantDashboard";
-import OpsAdminDashboard from "../pages/Dashboards/OpsAdminDashboard";
-import OpsDashboard from "../pages/Dashboards/OpsDashboard";
-import RiskDashboard from "../pages/Dashboards/RiskDashboard";
-import UserDashboard from "../pages/Dashboards/UserDashboard";
+// Lazy-loaded components
+const AdminDashboard = lazy(() => import("../pages/Dashboards/AdminDashboard"));
+const RegisterStaff = lazy(() => import("../pages/Dashboards/RegisterStaff"));
+const MerchantDashboard = lazy(() => import("../pages/Dashboards/MerchantDashboard"));
+const OpsAdminDashboard = lazy(() => import("../pages/Dashboards/OpsAdminDashboard"));
+const OpsDashboard = lazy(() => import("../pages/Dashboards/OpsDashboard"));
+const RiskDashboard = lazy(() => import("../pages/Dashboards/RiskDashboard"));
+const UserDashboard = lazy(() => import("../pages/Dashboards/UserDashboard"));
 
-// Auth pages
-import Login from "../pages/entrypages/login";
-import Registration from "../pages/entrypages/registration";
+const Login = lazy(() => import("../pages/entrypages/login"));
+const Registration = lazy(() => import("../pages/entrypages/registration"));
 
-// Feature pages
-import ShowLimit from "../pages/Limits/ShowLimit";
-import CreateLimit from "../pages/Limits/CreateLimit";
-import UpdateLimit from "../pages/Limits/UpdateLimit";
+const ShowLimit = lazy(() => import("../pages/Limits/ShowLimit"));
+const CreateLimit = lazy(() => import("../pages/Limits/CreateLimit"));
+const UpdateLimit = lazy(() => import("../pages/Limits/UpdateLimit"));
 
-import MerchantSettlements from "../pages/settlements/MerchantSettlements";
-// Landing (public)
-import Landing from "../pages/landing/Landing";
+const MerchantSettlements = lazy(() => import("../pages/settlements/MerchantSettlements"));
+const Landing = lazy(() => import("../pages/landing/Landing"));
+
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      ===== Public =====
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Registration />} />
+    <Suspense
+      fallback={
+        <div className="text-white text-center mt-10 text-lg">
+          Loading…
+        </div>
+      }
+    >
+      <Routes>
 
-      {/* Backward-compat: /dashboard -> /dashboard/admin */}
-      <Route path="/dashboard" element={<Navigate to="/dashboard/admin" replace />} />
+        {/* Public */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
 
-      {/* ===== Admin (nested) =====
-         NOTE: AdminDashboard MUST render nested routes via useOutlet() or <Outlet/>.
-         Example: const outlet = useOutlet(); return outlet ? <Shell>{outlet}</Shell> : <Shell>Home</Shell>
-      */}
-      <Route
-        path="/dashboard/admin"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      >
-        {/* Child pages under /dashboard/admin/... */}
-        <Route path="register-staff" element={<RegisterStaff />} />
+        {/* Default redirect */}
+        <Route path="/dashboard" element={<Navigate to="/dashboard/admin" replace />} />
 
-        {/* Limits nested group: /dashboard/admin/limits/create and /dashboard/admin/limits/:userId */}
-        <Route path="limits">
-          {/* <Route path="create" element={<CreateLimit />} />
-          <Route path=":userId" element={<ShowLimit />} /> */}
-          <Route path="create" element={<CreateLimit />} />
-          <Route path="update/:limitId" element={<UpdateLimit />} />   {/* <-- ADD THIS */}
-          <Route path=":userId" element={<ShowLimit />} />
+        {/* Admin routes */}
+        <Route
+          path="/dashboard/admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="register-staff" element={<RegisterStaff />} />
 
-          
+          <Route path="limits">
+            <Route path="create" element={<CreateLimit />} />
+            <Route path="update/:limitId" element={<UpdateLimit />} />
+            <Route path=":userId" element={<ShowLimit />} />
+          </Route>
+
+          <Route
+            path="settlements/merchant/:merchantId"
+            element={<MerchantSettlements />}
+          />
         </Route>
-        <Route path="settlements/merchant/:merchantId" element={<MerchantSettlements />} />
-      
-      </Route>
 
-      {/* ===== Other role dashboards (top-level) ===== */}
-      <Route
-        path="/dashboard/merchant"
-        element={
-          <ProtectedRoute allowedRoles={["merchant"]}>
-            <MerchantDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Other role dashboards */}
+        <Route
+          path="/dashboard/merchant"
+          element={
+            <ProtectedRoute allowedRoles={["merchant"]}>
+              <MerchantDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/dashboard/ops"
-        element={
-          <ProtectedRoute allowedRoles={["ops"]}>
-            <OpsDashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard/ops"
+          element={
+            <ProtectedRoute allowedRoles={["ops"]}>
+              <OpsDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/dashboard/ops-admin"
-        element={
-          <ProtectedRoute allowedRoles={["admin", "ops"]}>
-            <OpsAdminDashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard/ops-admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin", "ops"]}>
+              <OpsAdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/dashboard/risk"
-        element={
-          <ProtectedRoute allowedRoles={["risk"]}>
-            <RiskDashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard/risk"
+          element={
+            <ProtectedRoute allowedRoles={["risk"]}>
+              <RiskDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/dashboard/user"
-        element={
-          <ProtectedRoute allowedRoles={["user"]}>
-            <UserDashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard/user"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* ===== IMPORTANT =====
-          Remove old top-level /limits routes to avoid duplicate matches:
-          <Route path="/limits/create" ... />
-          <Route path="/limits/:userId" ... />
-      */}
-
-      {/* ===== 404 ===== */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* 404 redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   );
 }
