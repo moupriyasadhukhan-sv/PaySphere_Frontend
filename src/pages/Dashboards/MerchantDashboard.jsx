@@ -13,13 +13,17 @@ export default function MerchantDashboard() {
 const logout = useLogout("/login");
 
   const navItems = [
-    { key: "home", label: "Home", icon: <HomeIcon /> },
-    { key: "wallet", label: "Wallet", icon: <WalletIcon /> },
-    { key: "report", label: "Report", icon: <ReportIcon /> },
-    { key: "refund", label: "Refund", icon: <RefundIcon /> },
-    { key: "settings", label: "Settings", icon: <SettingsIcon /> },
-    { key: "logout", label: "Logout", icon: <LogoutIcon /> },
+    { key: "home", label: "Home", icon: <HomeIcon />, path: "/dashboard/merchant" },
+    { key: "wallet", label: "Wallet", icon: <WalletIcon />, path: "/dashboard/merchant/wallet" },
+    { key: "report", label: "Report", icon: <ReportIcon />, path: "/dashboard/merchant/report" },
+ 
+    // ✅ REFUND MENU
+    { key: "refund", label: "Refund", icon: <RefundIcon />, path: "/dashboard/merchant/refund" },
+ 
+    { key: "settings", label: "Settings", icon: <SettingsIcon />, path: "/dashboard/merchant/settings" },
+    { key: "logout", label: "Logout", icon: <LogoutIcon />, path: "#" },
   ];
+ 
 
   return (
     <DashboardShell
