@@ -1,28 +1,20 @@
 // import { createSlice } from "@reduxjs/toolkit";
 
-// const savedToken = localStorage.getItem("accessToken");
-// const savedRole = localStorage.getItem("role");
-
 // const authSlice = createSlice({
 //   name: "auth",
 //   initialState: {
-//     accessToken: savedToken || null,
-//     role: savedRole || null
+//     accessToken: null,
+//     role: null
 //   },
 //   reducers: {
 //     setCredentials(state, action) {
 //       const { accessToken, role } = action.payload;
 //       state.accessToken = accessToken;
 //       state.role = role;
-
-//       localStorage.setItem("accessToken", accessToken);
-//       localStorage.setItem("role", role);
 //     },
 //     logout(state) {
 //       state.accessToken = null;
 //       state.role = null;
-//       localStorage.removeItem("accessToken");
-//       localStorage.removeItem("role");
 //     }
 //   }
 // });
@@ -30,26 +22,74 @@
 // export const { setCredentials, logout } = authSlice.actions;
 // export default authSlice.reducer;
 
-import { createSlice } from "@reduxjs/toolkit";
 
+// import { createSlice } from "@reduxjs/toolkit";
+
+// const authSlice = createSlice({
+//   name: "auth",
+//   initialState: {
+//     accessToken: null,
+//     role: null,
+//     userId: null,
+//     merchantId: null,
+//     walletId: null,
+//   },
+//   reducers: {
+//     setCredentials(state, action) {
+//       const { accessToken, role, userId, merchantId } = action.payload;
+//       state.accessToken = accessToken;
+//       state.role = role;
+//       state.userId = userId;
+//       state.merchantId = merchantId;
+//     },
+//     setWalletId(state, action) {
+//       state.walletId = action.payload;
+//     },
+//     logout(state) {
+//       state.accessToken = null;
+//       state.role = null;
+//       state.userId = null;
+//       state.merchantId = null;
+//       state.walletId = null;
+//     }
+//   }
+// });
+
+// export const { setCredentials, setWalletId, logout } = authSlice.actions;
+// export default authSlice.reducer;
+
+
+import { createSlice } from "@reduxjs/toolkit";
+ 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     accessToken: null,
-    role: null
+    role: null,
+    userId: null,
+    merchantId: null,
+    walletId: null,
   },
   reducers: {
     setCredentials(state, action) {
-      const { accessToken, role } = action.payload;
+      const { accessToken, role, userId, merchantId } = action.payload;
       state.accessToken = accessToken;
       state.role = role;
+      state.userId = userId;
+      state.merchantId = merchantId;
+    },
+    setWalletId(state, action) {
+      state.walletId = action.payload;
     },
     logout(state) {
       state.accessToken = null;
       state.role = null;
+      state.userId = null;
+      state.merchantId = null;
+      state.walletId = null;
     }
   }
 });
-
-export const { setCredentials, logout } = authSlice.actions;
+ 
+export const { setCredentials,setWalletId, logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -468,6 +468,127 @@
 
 
 
+// import axios from "axios";
+// import { store } from "../stores/store";
+// import { setCredentials, logout } from "../stores/authSlice";
+
+// const BASE_URL = "http://localhost:5245";
+
+// // ---- For refresh token cookie
+// export const authClient = axios.create({
+//   baseURL: BASE_URL,
+//   withCredentials: true, // VERY IMPORTANT
+// });
+
+// // ---- For normal API requests
+// export const api = axios.create({
+//   baseURL: BASE_URL,
+// });
+
+// // Attach Bearer token to all API requests
+// api.interceptors.request.use((config) => {
+//   const token = store.getState().auth.accessToken;
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// // Auto-refresh if access token expired
+// api.interceptors.response.use(
+//   (res) => res,
+//   async (error) => {
+//     const original = error.config;
+
+//     if (error.response?.status === 401 && !original._retry) {
+//       original._retry = true;
+
+//       try {
+//         const { data } = await authClient.post("/auth/refresh");
+//         const newToken = data.accessToken;
+
+//         if (newToken) {
+//           store.dispatch(
+//             setCredentials({
+//               accessToken: newToken,
+//               role: store.getState().auth.role,
+//             })
+//           );
+
+//           original.headers.Authorization = `Bearer ${newToken}`;
+//           return api(original);
+//         }
+//       } catch (e) {
+//         store.dispatch(logout());
+//         return Promise.reject(e);
+//       }
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );
+
+
+// import axios from "axios";
+// import { store } from "../stores/store";
+// import { setCredentials, logout } from "../stores/authSlice";
+ 
+// const BASE_URL = "http://localhost:5245";
+ 
+// // ---- For refresh token cookie
+// export const authClient = axios.create({
+//   baseURL: BASE_URL,
+//   withCredentials: true, // VERY IMPORTANT
+// });
+ 
+// // ---- For normal API requests
+// export const api = axios.create({
+//   baseURL: BASE_URL,
+// });
+ 
+// // Attach Bearer token to all API requests
+// api.interceptors.request.use((config) => {
+//   const token = store.getState().auth.accessToken;
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+ 
+// // Auto-refresh if access token expired
+// api.interceptors.response.use(
+//   (res) => res,
+//   async (error) => {
+//     const original = error.config;
+ 
+//     if (error.response?.status === 401 && !original._retry) {
+//       original._retry = true;
+ 
+//       try {
+//         const { data } = await authClient.post("/auth/refresh");
+//         const newToken = data.accessToken;
+ 
+//         if (newToken) {
+//           store.dispatch(
+//             setCredentials({
+//               accessToken: newToken,
+//               role: store.getState().auth.role,
+//             })
+//           );
+ 
+//           original.headers.Authorization = `Bearer ${newToken}`;
+//           return api(original);
+//         }
+//       } catch (e) {
+//         store.dispatch(logout());
+//         return Promise.reject(e);
+//       }
+//     }
+ 
+//     return Promise.reject(error);
+//   }
+// );
+ 
 import axios from "axios";
 import { store } from "../stores/store";
 import { setCredentials, logout } from "../stores/authSlice";
@@ -477,7 +598,7 @@ const BASE_URL = "http://localhost:5245";
 // ---- For refresh token cookie
 export const authClient = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // VERY IMPORTANT
+  withCredentials: true, // Cookie refresh enabled
 });
 
 // ---- For normal API requests
