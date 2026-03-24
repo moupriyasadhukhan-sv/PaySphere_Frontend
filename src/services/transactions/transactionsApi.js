@@ -1,75 +1,46 @@
 import { api } from "../http";
- 
-/* ----------------------------- HISTORY ------------------------------ */
- 
-export function getUserHistory(
-  userId,
-  { direction = "all", sortBy = "date", page = 1, pageSize = 20 } = {}
-) {
-  return api
-    .get(`/api/users/${userId}/transactions`, {
-      params: { direction, sortBy, page, pageSize },
-    })
-    .then((r) => r.data);
-}
- 
-export function getMerchantHistory(
-  merchantId,
-  { direction = "all", sortBy = "date", page = 1, pageSize = 20 } = {}
-) {
-  return api
-    .get(`/api/merchants/${merchantId}/transactions`, {
-      params: { direction, sortBy, page, pageSize },
-    })
-    .then((r) => r.data);
-}
- 
-/* ------------------------------ SINGLE READ ------------------------------ */
-export function getTransactionById(id) {
-  return api.get(`/api/Transactions/${id}`).then((r) => r.data);
-}
- 
-/* ------------------------------ CREATE ------------------------------ */
- 
-export function createP2P({ toWalletID, amount, currency = "INR", transactionDate, phoneNumber }) {
-  const body = {
-    toWalletID: Number(toWalletID),
-    amount: Number(amount),
-    currency,
-    transactionDate: transactionDate || new Date().toISOString(),
-    phoneNumber: String(phoneNumber || "").trim(),
+
+/**
+ * Fetch a page of transactions directly from the backend.
+ * @param {number} page
+ * @param {number} pageSize
+ * @returns {Promise<{items: any[], totalCount: number, page: number, pageSize: number}>}
+ */
+export async function getTransactionsSimple(page = 1, pageSize = 10) {
+  const res = await api.get("/api/Transactions", { params: { page, pageSize } });
+
+  // Accept both exact swagger shape and slight variations
+  const data = res?.data || {};
+  const itemsRaw = Array.isArray(data.items) ? data.items : (Array.isArray(data.data) ? data.data : []);
+  const totalCount =
+    data.totalCount ??
+    data.total ??
+    data.count ??
+    // if no total is provided, fall back to items length (not ideal, but keeps UI working)
+    itemsRaw.length;
+
+  // We keep the items as-is (PascalCase), but also add camelCase copies
+  const items = itemsRaw.map((t) => ({
+    // keep originals
+    transactionID: t.transactionID ?? t.TransactionID,
+    fromWalletID:  t.fromWalletID  ?? t.FromWalletID,
+    toWalletID:    t.toWalletID    ?? t.ToWalletID,
+    amount:        t.amount        ?? t.Amount,
+    currency:      t.currency      ?? t.Currency,
+    transactionType: t.transactionType ?? t.TransactionType,
+    transactionDate: t.transactionDate ?? t.TransactionDate,
+    status:          t.status          ?? t.Status,
+
+    // provide camelCase as convenience for components that expect it
+    transactionId: t.transactionID ?? t.TransactionID,
+    fromWalletId:  t.fromWalletID  ?? t.FromWalletID,
+    toWalletId:    t.toWalletID    ?? t.ToWalletID,
+  }));
+
+  return {
+    items,
+    totalCount: Number.isFinite(totalCount) ? totalCount : items.length,
+    page: data.page ?? page,
+    pageSize: data.pageSize ?? pageSize,
   };
-  return api.post("/api/Transactions/p2p", body).then((r) => r.data);
 }
- 
-export function createP2M({ toWalletID, amount, currency = "INR", transactionDate, phoneNumber }) {
-  const body = {
-    toWalletID: Number(toWalletID),
-    amount: Number(amount),
-    currency,
-    transactionDate: transactionDate || new Date().toISOString(),
-    phoneNumber: String(phoneNumber || "").trim(),
-  };
-  return api.post("/api/Transactions/p2m", body).then((r) => r.data);
-}
- 
-// Refund execution (optionally by Approved requestId)
-export function createRefund({
-  originalTransactionID,
-  amount,
-  currency = "INR",
-  transactionDate,
-  phoneNumber,
-  requestId,
-}) {
-  const body = {
-    originalTransactionID: Number(originalTransactionID),
-    amount: amount ? Number(amount) : undefined,
-    currency,
-    transactionDate: transactionDate || new Date().toISOString(),
-    phoneNumber: String(phoneNumber || "").trim(),
-    requestId: requestId || undefined,
-  };
-  return api.post("/api/Transactions/refunds", body).then((r) => r.data);
-}
- 

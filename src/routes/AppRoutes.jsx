@@ -293,6 +293,7 @@ const UpdateLimit = lazy(() => import("../pages/Limits/UpdateLimit"));
 const MerchantSettlements = lazy(() =>
   import("../pages/settlements/MerchantSettlements")
 );
+const CreateSettlement=lazy(()=> import("../pages/settlements/CreateSettlement"))
 
 // Newly added pages
 const UserTransactionsPage = lazy(() =>
@@ -353,6 +354,12 @@ export default function AppRoutes() {
             path="settlements/merchant/:merchantId"
             element={<MerchantSettlements />}
           />
+
+          
+          <Route
+              path="settlements/create/:merchantId"
+              element={<CreateSettlement />}
+            />
         </Route>
 
         {/* MERCHANT ROUTES */}

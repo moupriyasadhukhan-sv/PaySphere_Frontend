@@ -75,6 +75,70 @@
 
 
 // src/common/ConfirmDialog.jsx
+// import React from "react";
+
+// export default function ConfirmDialog({
+//   open,
+//   title = "Confirm",
+//   message = "Are you sure?",
+//   confirmText = "Delete",
+//   cancelText = "Cancel",
+//   onConfirm,
+//   onCancel,
+//   confirming = false, // optional loading flag
+// }) {
+//   if (!open) return null;
+
+//   return (
+//     <div className="fixed inset-0 z-50">
+//       {/* Backdrop */}
+//       <div
+//         className="absolute inset-0 bg-black/40"
+//         onClick={onCancel}
+//         aria-hidden="true"
+//       />
+
+//       {/* Dialog */}
+//       <div
+//         role="dialog"
+//         aria-modal="true"
+//         aria-labelledby="confirm-title"
+//         className="relative z-10 w-[min(92vw,480px)] mx-auto mt-24 rounded-xl overflow-hidden shadow-2xl bg-white"
+//       >
+//         <div className="bg-blue-500 px-5 py-4 text-white flex items-center justify-between">
+//           <h2 id="confirm-title" className="font-semibold text-lg">{title}</h2>
+//           <button type="button" className="rounded px-2 hover:bg-blue-600" onClick={onCancel} aria-label="Close">
+//             ×
+//           </button>
+//         </div>
+
+//         <div className="p-5 text-gray-800">
+//           {typeof message === "string" ? <p>{message}</p> : message}
+//         </div>
+
+//         <div className="px-5 py-3 bg-gray-50 flex items-center justify-end gap-3">
+//           <button type="button" className="px-3 py-1.5 border rounded-md" onClick={onCancel} disabled={confirming}>
+//             {cancelText}
+//           </button>
+//           <button
+//             type="button" // important: never submit outer forms
+//             className={`px-3 py-1.5 rounded-md text-white ${
+//               confirming ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
+//             }`}
+//             onClick={onConfirm} // <— THIS is where "Yes" triggers the passed action
+//             disabled={confirming}
+//           >
+//             {confirming ? "Working…" : confirmText}
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
 import React from "react";
 
 export default function ConfirmDialog({
@@ -89,12 +153,21 @@ export default function ConfirmDialog({
 }) {
   if (!open) return null;
 
+  // 👉 Prevent crashes if parent forgets to pass callbacks
+  const safeCancel = () => {
+    if (onCancel) onCancel();
+  };
+
+  const safeConfirm = () => {
+    if (onConfirm) onConfirm();
+  };
+
   return (
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40"
-        onClick={onCancel}
+        onClick={safeCancel}
         aria-hidden="true"
       />
 
@@ -106,8 +179,15 @@ export default function ConfirmDialog({
         className="relative z-10 w-[min(92vw,480px)] mx-auto mt-24 rounded-xl overflow-hidden shadow-2xl bg-white"
       >
         <div className="bg-blue-500 px-5 py-4 text-white flex items-center justify-between">
-          <h2 id="confirm-title" className="font-semibold text-lg">{title}</h2>
-          <button type="button" className="rounded px-2 hover:bg-blue-600" onClick={onCancel} aria-label="Close">
+          <h2 id="confirm-title" className="font-semibold text-lg">
+            {title}
+          </h2>
+          <button
+            type="button"
+            className="rounded px-2 hover:bg-blue-600"
+            onClick={safeCancel}
+            aria-label="Close"
+          >
             ×
           </button>
         </div>
@@ -117,15 +197,21 @@ export default function ConfirmDialog({
         </div>
 
         <div className="px-5 py-3 bg-gray-50 flex items-center justify-end gap-3">
-          <button type="button" className="px-3 py-1.5 border rounded-md" onClick={onCancel} disabled={confirming}>
+          <button
+            type="button"
+            className="px-3 py-1.5 border rounded-md"
+            onClick={safeCancel}
+            disabled={confirming}
+          >
             {cancelText}
           </button>
+
           <button
-            type="button" // important: never submit outer forms
+            type="button"
             className={`px-3 py-1.5 rounded-md text-white ${
               confirming ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
             }`}
-            onClick={onConfirm} // <— THIS is where "Yes" triggers the passed action
+            onClick={safeConfirm}
             disabled={confirming}
           >
             {confirming ? "Working…" : confirmText}
